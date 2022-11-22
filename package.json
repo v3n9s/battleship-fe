@@ -1,7 +1,10 @@
 {
   "name": "battleship-fe",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "dev": "webpack serve --disable-interpret --env mode=dev",
+    "build": "webpack --disable-interpret"
+  },
   "dependencies": {
     "@babel/core": "^7.20.2",
     "@babel/plugin-transform-modules-commonjs": "^7.19.6",
