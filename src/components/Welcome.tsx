@@ -13,7 +13,9 @@ const Welcome: FC<{ setToken: (token: string) => void }> = ({ setToken }) => {
   const [name, setName] = useState('');
 
   const [run, isLoading, response] = useHttpRequest<{ token: string }>(
-    new Request(`${config.backendUrl}/token?name=${name}`, { method: 'POST' }),
+    new Request(`${config.httpBackendUrl}/token?name=${name}`, {
+      method: 'POST',
+    }),
   );
 
   const onInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {

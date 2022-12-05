@@ -1,3 +1,4 @@
 export default {
-  backendUrl: process.env.BACKEND_URL as string,
+  httpBackendUrl: `http://${process.env.BACKEND_URL as string}`,
+  wsBackendUrl: `ws://${process.env.BACKEND_URL as string}`,
 };
