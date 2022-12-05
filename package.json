@@ -22,6 +22,7 @@
     "@typescript-eslint/eslint-plugin": "^5.44.0",
     "@typescript-eslint/parser": "^5.44.0",
     "babel-loader": "^9.1.0",
+    "battleship-types": "github:v3n9s/battleship-types",
     "dotenv-webpack": "^8.0.1",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
