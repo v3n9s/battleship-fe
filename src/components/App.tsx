@@ -1,5 +1,6 @@
 import { FC, useCallback, useState } from 'react';
 import { getToken, saveToken } from '../services/token';
+import Rooms from './Rooms';
 import Welcome from './Welcome';
 
 const App: FC = () => {
@@ -10,7 +11,7 @@ const App: FC = () => {
     saveToken(token);
   }, []);
 
-  return <>{token ? 'You are logged in' : <Welcome setToken={onToken} />}</>;
+  return token ? <Rooms token={token} /> : <Welcome setToken={onToken} />;
 };
 
 export default App;
