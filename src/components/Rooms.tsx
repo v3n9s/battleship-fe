@@ -1,7 +1,13 @@
-import { FC, useReducer } from 'react';
-import { Room, ServerMessage } from '../types';
+import { FC, useCallback, useReducer, useRef } from 'react';
+import {
+  ClientMessage,
+  CreateRoomMessage,
+  Room,
+  ServerMessage,
+} from '../types';
 import { useWs } from '../hooks/ws';
 import { getWsConnection } from '../services/ws-connection';
+import Form from './Form';
 
 type ReducerType = {
   rooms: Room[];
@@ -17,6 +23,11 @@ const roomReducer = (
       rooms: action.payload,
       serverResponded: true,
     };
+  } else if (action.type === 'RoomCreated') {
+    return {
+      ...state,
+      rooms: [...state.rooms, action.payload],
+    };
   }
   return state;
 };
@@ -27,10 +38,34 @@ const Rooms: FC<{ token: string }> = ({ token }) => {
     serverResponded: false,
   });
 
-  const [isConnecting] = useWs<ServerMessage>(getWsConnection(token), dispatch);
+  const ws = useRef(getWsConnection(token));
+
+  const [isConnecting] = useWs<ServerMessage>(ws.current, dispatch);
+
+  const createRoom = useCallback((payload: CreateRoomMessage) => {
+    ws.current.send(
+      JSON.stringify({ type: 'CreateRoom', payload } satisfies ClientMessage),
+    );
+  }, []);
 
   return (
     <>
+      <Form
+        fields={{
+          name: {
+            type: 'text',
+            placeholder: 'Name',
+            value: '',
+          },
+          password: {
+            type: 'password',
+            placeholder: 'Password',
+            value: '',
+          },
+        }}
+        onSubmit={createRoom}
+        submitButtonText="Create room"
+      />
       {isConnecting || !state.serverResponded
         ? 'Loading...'
         : state.rooms.length === 0
