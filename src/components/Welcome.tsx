@@ -1,62 +1,39 @@
-import {
-  ChangeEvent,
-  FC,
-  KeyboardEvent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { FC, useCallback } from 'react';
+import { UserData } from '../types';
 import config from '../config';
-import { useHttpRequest } from '../hooks/http-request';
+import Form from './Form';
 
-const Welcome: FC<{ setToken: (token: string) => void }> = ({ setToken }) => {
-  const [name, setName] = useState('');
-
-  const [run, isLoading, response] = useHttpRequest<{ token: string }>(
-    new Request(`${config.httpBackendUrl}/token?name=${name}`, {
-      method: 'POST',
-    }),
-  );
-
-  const onInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  }, []);
-
-  const submitName = useCallback(() => {
-    if (name.length >= 1 && name.length <= 32) {
-      run();
-    }
-  }, [name, run]);
-
-  const onEnter = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.code === 'Enter') {
-        submitName();
+const Welcome: FC<{
+  setUserData: (data: UserData) => void;
+}> = ({ setUserData }) => {
+  const submitName = useCallback(
+    async ({ name }: { name: string }) => {
+      if (name.length >= 1 && name.length <= 32) {
+        const response = await fetch(
+          `${config.httpBackendUrl}/token?name=${name}`,
+          {
+            method: 'POST',
+          },
+        );
+        const userData = (await response.json()) as UserData;
+        setUserData(userData);
       }
     },
-    [submitName],
+    [setUserData],
   );
 
-  useEffect(() => {
-    if (response && response.token) {
-      setToken(response.token);
-    }
-  }, [response, setToken]);
-
   return (
-    <>
-      Please, enter your name
-      <input
-        type="text"
-        placeholder="from 1 to 32 characters"
-        onChange={onInputChange}
-        onKeyDown={onEnter}
-        value={name}
-      />
-      <button onClick={submitName} disabled={isLoading}>
-        Submit
-      </button>
-    </>
+    <Form
+      fields={{
+        name: {
+          type: 'text',
+          placeholder: 'Please, enter your name',
+          value: '',
+        },
+      }}
+      onSubmit={submitName}
+      submitButtonText="Submit"
+    />
   );
 };
 

@@ -1,17 +1,22 @@
 import { FC, useCallback, useState } from 'react';
-import { getToken, saveToken } from '../services/token';
+import { UserData } from '../types';
+import { getUserData, saveUserData } from '../services/user-data';
 import Rooms from './Rooms';
 import Welcome from './Welcome';
 
 const App: FC = () => {
-  const [token, setToken] = useState(getToken());
+  const [userData, setUserData] = useState(getUserData());
 
-  const onToken = useCallback((token: string) => {
-    setToken(token);
-    saveToken(token);
+  const onUserData = useCallback((data: UserData) => {
+    setUserData(data);
+    saveUserData(data);
   }, []);
 
-  return token ? <Rooms token={token} /> : <Welcome setToken={onToken} />;
+  return userData?.token ? (
+    <Rooms token={userData.token} />
+  ) : (
+    <Welcome setUserData={onUserData} />
+  );
 };
 
 export default App;
