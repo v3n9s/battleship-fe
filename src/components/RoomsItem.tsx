@@ -1,34 +1,30 @@
-import { ClientMessage, RoomDto } from '../types';
+import { RoomDto } from '../types';
 import { FC, useCallback, useContext } from 'react';
 import { UserDataContext } from '../contexts/user-data';
 import Form from './Form';
+import { useWs } from '../hooks/ws';
 
-const RoomsItem: FC<{
-  room: RoomDto;
-  ws: WebSocket;
-}> = ({ room, ws }) => {
-  const { user } = useContext(UserDataContext);
+const RoomsItem: FC<{ room: RoomDto }> = ({ room }) => {
+  const { user, token } = useContext(UserDataContext);
+
+  const { send } = useWs(token);
 
   const join = useCallback(
     ({ password = '' }) => {
-      ws.send(
-        JSON.stringify({
-          type: 'JoinRoom',
-          payload: { id: room.id, password },
-        } satisfies ClientMessage),
-      );
+      send({
+        type: 'JoinRoom',
+        payload: { id: room.id, password },
+      });
     },
-    [ws, room.id],
+    [send, room.id],
   );
 
   const leave = useCallback(() => {
-    ws.send(
-      JSON.stringify({
-        type: 'LeaveRoom',
-        payload: { id: room.id },
-      } satisfies ClientMessage),
-    );
-  }, [ws, room.id]);
+    send({
+      type: 'LeaveRoom',
+      payload: { id: room.id },
+    });
+  }, [send, room.id]);
 
   return (
     <>

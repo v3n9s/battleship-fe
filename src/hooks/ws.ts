@@ -1,7 +1,11 @@
-import { useEffect, useState } from 'react';
+import { ClientMessage, ServerMessage } from 'battleship-types';
+import { useCallback, useEffect, useState } from 'react';
+import { getWsConnection } from '../services/ws-connection';
 
-export const useWs = <T>(ws: WebSocket, cb: (data: T) => void) => {
+export const useWs = (token: string, cb?: (data: ServerMessage) => void) => {
   const [isConnecting, setIsConnecting] = useState(true);
+
+  const ws = getWsConnection(token);
 
   useEffect(() => {
     const openHandler = () => {
@@ -14,8 +18,8 @@ export const useWs = <T>(ws: WebSocket, cb: (data: T) => void) => {
       } catch {
         data = null;
       }
-      if (data) {
-        cb(data as T);
+      if (cb && data) {
+        cb(data as ServerMessage);
       }
     };
     ws.addEventListener('open', openHandler);
@@ -26,5 +30,12 @@ export const useWs = <T>(ws: WebSocket, cb: (data: T) => void) => {
     };
   }, [ws, cb]);
 
-  return [isConnecting] as const;
+  const send = useCallback(
+    (message: ClientMessage) => {
+      ws.send(JSON.stringify(message));
+    },
+    [ws],
+  );
+
+  return { send, isConnecting };
 };
