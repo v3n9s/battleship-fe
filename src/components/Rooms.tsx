@@ -1,65 +1,14 @@
-import { FC, useCallback, useContext, useReducer, useRef } from 'react';
-import {
-  ClientMessage,
-  CreateRoomMessage,
-  RoomDto,
-  ServerMessage,
-} from '../types';
+import { FC, useCallback, useContext, useRef } from 'react';
+import { ClientMessage, CreateRoomMessage, ServerMessage } from '../types';
 import { useWs } from '../hooks/ws';
 import { getWsConnection } from '../services/ws-connection';
 import Form from './Form';
 import RoomsItem from './RoomsItem';
 import { UserDataContext } from '../contexts/user-data';
-
-type ReducerType = {
-  rooms: RoomDto[];
-  serverResponded: boolean;
-};
-
-const roomReducer = (
-  state: ReducerType,
-  action: ServerMessage,
-): ReducerType => {
-  if (action.type === 'ExistingRooms') {
-    return {
-      rooms: action.payload,
-      serverResponded: true,
-    };
-  } else if (action.type === 'RoomCreated') {
-    return {
-      ...state,
-      rooms: [...state.rooms, action.payload],
-    };
-  } else if (action.type === 'RoomJoin') {
-    return {
-      ...state,
-      rooms: state.rooms.map((r) =>
-        r.id === action.payload.roomId
-          ? { ...r, player2: action.payload.user }
-          : r,
-      ),
-    };
-  } else if (action.type === 'RoomLeave') {
-    return {
-      ...state,
-      rooms: state.rooms.map((r) =>
-        r.id === action.payload.roomId ? { ...r, player2: undefined } : r,
-      ),
-    };
-  } else if (action.type === 'RoomDelete') {
-    return {
-      ...state,
-      rooms: state.rooms.filter((r) => r.id !== action.payload.roomId),
-    };
-  }
-  return state;
-};
+import { RoomsContext } from '../contexts/rooms';
 
 const Rooms: FC = () => {
-  const [state, dispatch] = useReducer(roomReducer, {
-    rooms: [],
-    serverResponded: false,
-  });
+  const { state, dispatch } = useContext(RoomsContext);
 
   const { token } = useContext(UserDataContext);
 
