@@ -8,6 +8,7 @@ import {
 import { useWs } from '../hooks/ws';
 import { getWsConnection } from '../services/ws-connection';
 import Form from './Form';
+import { UserDataContext } from '../contexts/user-data';
 
 type ReducerType = {
   rooms: Room[];
@@ -32,11 +33,13 @@ const roomReducer = (
   return state;
 };
 
-const Rooms: FC<{ token: string }> = ({ token }) => {
+const Rooms: FC = () => {
   const [state, dispatch] = useReducer(roomReducer, {
     rooms: [],
     serverResponded: false,
   });
+
+  const { token } = useContext(UserDataContext);
 
   const ws = useRef(getWsConnection(token));
 
