@@ -1,17 +1,18 @@
-import { FC, useCallback, useReducer, useRef } from 'react';
+import { FC, useCallback, useContext, useReducer, useRef } from 'react';
 import {
   ClientMessage,
   CreateRoomMessage,
-  Room,
+  RoomDto,
   ServerMessage,
 } from '../types';
 import { useWs } from '../hooks/ws';
 import { getWsConnection } from '../services/ws-connection';
 import Form from './Form';
+import RoomsItem from './RoomsItem';
 import { UserDataContext } from '../contexts/user-data';
 
 type ReducerType = {
-  rooms: Room[];
+  rooms: RoomDto[];
   serverResponded: boolean;
 };
 
@@ -28,6 +29,27 @@ const roomReducer = (
     return {
       ...state,
       rooms: [...state.rooms, action.payload],
+    };
+  } else if (action.type === 'RoomJoin') {
+    return {
+      ...state,
+      rooms: state.rooms.map((r) =>
+        r.id === action.payload.roomId
+          ? { ...r, player2: action.payload.user }
+          : r,
+      ),
+    };
+  } else if (action.type === 'RoomLeave') {
+    return {
+      ...state,
+      rooms: state.rooms.map((r) =>
+        r.id === action.payload.roomId ? { ...r, player2: undefined } : r,
+      ),
+    };
+  } else if (action.type === 'RoomDelete') {
+    return {
+      ...state,
+      rooms: state.rooms.filter((r) => r.id !== action.payload.roomId),
     };
   }
   return state;
@@ -73,7 +95,9 @@ const Rooms: FC = () => {
         ? 'Loading...'
         : state.rooms.length === 0
         ? 'There is no rooms yet'
-        : state.rooms.map((room) => <div key={room.id}>{room.name}</div>)}
+        : state.rooms.map((room) => (
+            <RoomsItem key={room.id} room={room} ws={ws.current} />
+          ))}
     </>
   );
 };
