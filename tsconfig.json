@@ -4,18 +4,18 @@
     "noUncheckedIndexedAccess": true,
     "strict": true,
 
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "esnext",
+    "moduleResolution": "node16",
 
     "newLine": "lf",
     "sourceMap": true,
 
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
 
     "jsx": "react-jsx",
-    "lib": ["ESNext", "DOM"],
-    "target": "ESNext"
+    "lib": ["esnext", "dom"],
+    "target": "esnext"
   }
 }
