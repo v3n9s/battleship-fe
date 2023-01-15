@@ -1,10 +1,10 @@
-import { RoomDto } from '../types';
+import { Room } from '../types';
 import { FC, useCallback, useContext } from 'react';
 import { UserDataContext } from '../contexts/user-data';
 import Form from './Form';
 import { useWs } from '../hooks/ws';
 
-const RoomsItem: FC<{ room: RoomDto }> = ({ room }) => {
+const RoomsItem: FC<{ room: Room }> = ({ room }) => {
   const { user, token } = useContext(UserDataContext);
 
   const { send } = useWs(token);
@@ -13,7 +13,7 @@ const RoomsItem: FC<{ room: RoomDto }> = ({ room }) => {
     ({ password = '' }) => {
       send({
         type: 'JoinRoom',
-        payload: { id: room.id, password },
+        payload: { roomId: room.id, password },
       });
     },
     [send, room.id],
@@ -22,7 +22,7 @@ const RoomsItem: FC<{ room: RoomDto }> = ({ room }) => {
   const leave = useCallback(() => {
     send({
       type: 'LeaveRoom',
-      payload: { id: room.id },
+      payload: { roomId: room.id },
     });
   }, [send, room.id]);
 

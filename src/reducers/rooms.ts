@@ -1,7 +1,7 @@
-import { RoomDto, ServerMessage } from 'battleship-types';
+import { Room, ServerMessage } from '../types';
 
 export type RoomsReducerType = {
-  rooms: RoomDto[];
+  rooms: Room[];
   serverResponded: boolean;
 };
 
@@ -14,7 +14,7 @@ export const roomsReducer = (
       rooms: action.payload,
       serverResponded: true,
     };
-  } else if (action.type === 'RoomCreated') {
+  } else if (action.type === 'RoomCreate') {
     return {
       ...state,
       rooms: [...state.rooms, action.payload],

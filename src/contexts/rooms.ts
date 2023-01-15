@@ -1,4 +1,4 @@
-import { ServerMessage } from 'battleship-types';
+import { ServerMessage } from '../types';
 import { createContext } from 'react';
 import { RoomsReducerType } from '../reducers/rooms';
 

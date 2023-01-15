@@ -1,4 +1,4 @@
-import { ClientMessage, ServerMessage } from 'battleship-types';
+import { ClientMessage, ServerMessage } from '../types';
 import { useCallback, useEffect, useState } from 'react';
 import { getWsConnection } from '../services/ws-connection';
 
