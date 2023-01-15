@@ -17,5 +17,10 @@
     "jsx": "react-jsx",
     "lib": ["esnext", "dom"],
     "target": "esnext"
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
   }
 }

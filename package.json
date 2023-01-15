@@ -2,8 +2,8 @@
   "name": "battleship-fe",
   "private": true,
   "scripts": {
-    "dev": "webpack serve --disable-interpret --env mode=dev",
-    "build": "webpack --disable-interpret",
+    "dev": "webpack serve --env mode=dev",
+    "build": "webpack",
     "lint": "eslint . --ext .ts,.tsx"
   },
   "dependencies": {
