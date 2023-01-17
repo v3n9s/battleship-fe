@@ -8,6 +8,7 @@ import { UserDataContext } from '../contexts/user-data';
 import { RoomsContext } from '../contexts/rooms';
 import { roomsReducer } from '../reducers/rooms';
 import { theme } from '../theme';
+import Container from './styled/Container';
 
 const ResetStyles = createGlobalStyle`
   * {
@@ -51,15 +52,17 @@ const App: FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <ResetStyles />
-      {userData ? (
-        <UserDataContext.Provider value={userData}>
-          <RoomsContext.Provider value={{ state, dispatch }}>
-            <Rooms />
-          </RoomsContext.Provider>
-        </UserDataContext.Provider>
-      ) : (
-        <Welcome setUserData={onUserData} />
-      )}
+      <Container maxWidth={theme.mainContainerMaxWidth}>
+        {userData ? (
+          <UserDataContext.Provider value={userData}>
+            <RoomsContext.Provider value={{ state, dispatch }}>
+              <Rooms />
+            </RoomsContext.Provider>
+          </UserDataContext.Provider>
+        ) : (
+          <Welcome setUserData={onUserData} />
+        )}
+      </Container>
     </ThemeProvider>
   );
 };
