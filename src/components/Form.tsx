@@ -1,11 +1,31 @@
 import {
   ChangeEvent,
   FormEvent,
+  Fragment,
   HTMLInputTypeAttribute,
   ReactElement,
   useCallback,
   useState,
 } from 'react';
+import styled from 'styled-components';
+import Button from './styled/Button';
+import Input from './styled/Input';
+
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const StyledTitle = styled.div`
+  font-size: 20px;
+`;
+
+const List = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+`;
 
 type Field = {
   type: HTMLInputTypeAttribute;
@@ -52,21 +72,22 @@ const Form = <
   );
 
   return (
-    <form onSubmit={onSubmit}>
-      {Object.entries(fields).map(([name, { type, placeholder }]) => (
-        <div key={name}>
-          <input
-            name={name}
-            type={type}
-            placeholder={placeholder}
-            value={formValues[name]}
-            onChange={onChange}
-          />
-          <br />
-        </div>
-      ))}
-      <button type="submit">{submitButtonText}</button>
-    </form>
+    <StyledForm onSubmit={onSubmit}>
+      <List>
+        {Object.entries(fields).map(([name, { type, placeholder }]) => (
+          <Fragment key={name}>
+            <StyledTitle>{placeholder}</StyledTitle>
+            <Input
+              name={name}
+              type={type}
+              value={formValues[name]}
+              onChange={onChange}
+            />
+          </Fragment>
+        ))}
+      </List>
+      <Button type="submit">{submitButtonText}</Button>
+    </StyledForm>
   );
 };
 
