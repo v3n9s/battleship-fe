@@ -1,7 +1,15 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useRef } from 'react';
 import { UserData } from '../types';
 import config from '../config';
 import Form from './Form';
+import styled from 'styled-components';
+
+const StyledWelcome = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
 
 const Welcome: FC<{
   setUserData: (data: UserData) => void;
@@ -23,17 +31,21 @@ const Welcome: FC<{
   );
 
   return (
-    <Form
-      fields={{
-        name: {
-          type: 'text',
-          placeholder: 'Please, enter your name',
-          value: '',
-        },
-      }}
-      onSubmit={submitName}
-      submitButtonText="Submit"
-    />
+    <StyledWelcome>
+      <Form
+        fields={
+          useRef({
+            name: {
+              type: 'text',
+              placeholder: 'Please, enter your name',
+              value: '',
+            },
+          }).current
+        }
+        onSubmit={submitName}
+        submitButtonText="Submit"
+      />
+    </StyledWelcome>
   );
 };
 
