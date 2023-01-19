@@ -2,7 +2,44 @@ import { Room } from '../types';
 import { FC, useCallback, useContext } from 'react';
 import { UserDataContext } from '../contexts/user-data';
 import { useWs } from '../hooks/ws';
+import StyledButton from './styled/Button';
+import styled from 'styled-components';
 import { OnPasswordSubmit } from './PasswordModal';
+
+const StyledRoomsItem = styled.div`
+  display: flex;
+  border: 2px solid ${(props) => props.theme.primaryColor};
+`;
+
+const StyledInfo = styled.div`
+  flex: 1 0 1px;
+`;
+
+const StyledTitle = styled.div`
+  border-bottom: 2px solid ${(props) => props.theme.primaryColor};
+  font-size: 32px;
+  text-align: center;
+  word-break: break-all;
+`;
+
+const StyledPlayers = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: 24px;
+`;
+
+const StyledPlayer = styled.div<{ isEmpty?: boolean }>`
+  color: ${(props) => (props.isEmpty ? props.theme.primaryColor : 'auto')};
+  padding: 5px;
+  word-break: break-all;
+`;
+
+const Button = styled(StyledButton)`
+  flex: 0 0 100px;
+  border: none;
+  border-left: 2px solid ${(props) => props.theme.primaryColor};
+`;
 
 export type SetOnPasswordSubmit = (cb: OnPasswordSubmit) => void;
 
@@ -42,15 +79,23 @@ const RoomsItem: FC<{
   }, [send, room.id]);
 
   return (
-    <>
-      <div>{room.name}</div>
-      <div>{`${room.player1.name} vs ${room.player2?.name || 'empty'}`}</div>
+    <StyledRoomsItem>
+      <StyledInfo>
+        <StyledTitle>{room.name}</StyledTitle>
+        <StyledPlayers>
+          <StyledPlayer>{room.player1.name}</StyledPlayer>
+          vs
+          <StyledPlayer isEmpty={!room.player2?.name}>
+            {room.player2?.name || 'empty'}
+          </StyledPlayer>
+        </StyledPlayers>
+      </StyledInfo>
       {user.id === room.player1.id || user.id === room.player2?.id ? (
-        <button onClick={leave}>leave</button>
+        <Button onClick={leave}>leave</Button>
       ) : (
-        <button onClick={join}>join</button>
+        <Button onClick={join}>join</Button>
       )}
-    </>
+    </StyledRoomsItem>
   );
 };
 
