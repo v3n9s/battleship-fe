@@ -1,23 +1,38 @@
 import { Room } from '../types';
 import { FC, useCallback, useContext } from 'react';
 import { UserDataContext } from '../contexts/user-data';
-import Form from './Form';
 import { useWs } from '../hooks/ws';
+import { OnPasswordSubmit } from './PasswordModal';
 
-const RoomsItem: FC<{ room: Room }> = ({ room }) => {
+export type SetOnPasswordSubmit = (cb: OnPasswordSubmit) => void;
+
+const RoomsItem: FC<{
+  room: Room;
+  openModal: SetOnPasswordSubmit;
+  closeModal: () => void;
+}> = ({ room, openModal, closeModal }) => {
   const { user, token } = useContext(UserDataContext);
 
   const { send } = useWs(token);
 
-  const join = useCallback(
-    ({ password = '' }) => {
+  const joinWithPassword = useCallback<OnPasswordSubmit>(
+    ({ password }) => {
       send({
         type: 'JoinRoom',
         payload: { roomId: room.id, password },
       });
+      closeModal();
     },
-    [send, room.id],
+    [send, room.id, closeModal],
   );
+
+  const join = useCallback(() => {
+    if (room.hasPassword) {
+      openModal(joinWithPassword);
+    } else {
+      joinWithPassword({ password: '' });
+    }
+  }, [room.hasPassword, openModal, joinWithPassword]);
 
   const leave = useCallback(() => {
     send({
@@ -33,21 +48,7 @@ const RoomsItem: FC<{ room: Room }> = ({ room }) => {
       {user.id === room.player1.id || user.id === room.player2?.id ? (
         <button onClick={leave}>leave</button>
       ) : (
-        <Form
-          fields={
-            room.hasPassword
-              ? {
-                  password: {
-                    type: 'password',
-                    placeholder: 'password',
-                    value: '',
-                  },
-                }
-              : {}
-          }
-          onSubmit={join}
-          submitButtonText="join"
-        />
+        <button onClick={join}>join</button>
       )}
     </>
   );
