@@ -1,12 +1,11 @@
-import { FC, useCallback, useContext, useRef, useState } from 'react';
+import { FC, useCallback, useRef, useState } from 'react';
 import { CreateRoomMessage } from '../types';
 import Form from './Form';
 import RoomsItem from './RoomsItem';
-import { UserDataContext } from '../contexts/user-data';
-import { RoomsContext } from '../contexts/rooms';
 import { useWs } from '../hooks/ws';
 import styled from 'styled-components';
 import PasswordModal, { OnPasswordSubmit } from './PasswordModal';
+import { useStore } from '../hooks/store';
 
 const StyledRooms = styled.div`
   padding: 10px;
@@ -25,8 +24,6 @@ const StatusText = styled.div`
 `;
 
 const Rooms: FC = () => {
-  const { state, dispatch } = useContext(RoomsContext);
-
   const [modal, setModal] = useState<{
     isOpen: boolean;
     onSubmit: OnPasswordSubmit;
@@ -40,9 +37,9 @@ const Rooms: FC = () => {
     setModal((prevState) => ({ ...prevState, isOpen: false }));
   }, []);
 
-  const { token } = useContext(UserDataContext);
+  const { state } = useStore();
 
-  const { send } = useWs(token, dispatch);
+  const { send } = useWs(state.userData.token);
 
   const createRoom = useCallback(
     (payload: CreateRoomMessage) => {

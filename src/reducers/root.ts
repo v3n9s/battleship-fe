@@ -1,19 +1,19 @@
-import { Room, ServerMessage } from '../types';
+import { Room, ServerMessage, UserData } from '../types';
 
-export type RoomsReducerType = {
+export type RootReducerType = {
+  userData: UserData;
   rooms: Room[];
   serverResponded: boolean;
 };
 
-export const roomsReducer = (
-  state: RoomsReducerType,
-  action: ServerMessage,
-): RoomsReducerType => {
+export type RootReducerActionType = ServerMessage;
+
+export const rootReducer = (
+  state: RootReducerType,
+  action: RootReducerActionType,
+): RootReducerType => {
   if (action.type === 'ExistingRooms') {
-    return {
-      rooms: action.payload,
-      serverResponded: true,
-    };
+    return { ...state, rooms: action.payload, serverResponded: true };
   } else if (action.type === 'RoomCreate') {
     return {
       ...state,

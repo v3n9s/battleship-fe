@@ -1,10 +1,10 @@
 import { Room } from '../types';
-import { FC, useCallback, useContext } from 'react';
-import { UserDataContext } from '../contexts/user-data';
+import { FC, useCallback } from 'react';
 import { useWs } from '../hooks/ws';
 import StyledButton from './styled/Button';
 import styled from 'styled-components';
 import { OnPasswordSubmit } from './PasswordModal';
+import { useStore } from '../hooks/store';
 
 const StyledRoomsItem = styled.div`
   display: flex;
@@ -48,9 +48,9 @@ const RoomsItem: FC<{
   openModal: SetOnPasswordSubmit;
   closeModal: () => void;
 }> = ({ room, openModal, closeModal }) => {
-  const { user, token } = useContext(UserDataContext);
+  const { state } = useStore();
 
-  const { send } = useWs(token);
+  const { send } = useWs(state.userData.token);
 
   const joinWithPassword = useCallback<OnPasswordSubmit>(
     ({ password }) => {
@@ -90,7 +90,8 @@ const RoomsItem: FC<{
           </StyledPlayer>
         </StyledPlayers>
       </StyledInfo>
-      {user.id === room.player1.id || user.id === room.player2?.id ? (
+      {state.userData.user.id === room.player1.id ||
+      state.userData.user.id === room.player2?.id ? (
         <Button onClick={leave}>leave</Button>
       ) : (
         !room.player2?.id && <Button onClick={join}>join</Button>
