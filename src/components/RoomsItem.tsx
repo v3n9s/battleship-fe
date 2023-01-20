@@ -93,7 +93,7 @@ const RoomsItem: FC<{
       {user.id === room.player1.id || user.id === room.player2?.id ? (
         <Button onClick={leave}>leave</Button>
       ) : (
-        <Button onClick={join}>join</Button>
+        !room.player2?.id && <Button onClick={join}>join</Button>
       )}
     </StyledRoomsItem>
   );
