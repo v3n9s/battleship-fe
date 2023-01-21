@@ -30,6 +30,7 @@ module.exports = {
         },
       },
       rules: {
+        'no-empty': ['error', { allowEmptyCatch: true }],
         '@typescript-eslint/no-misused-promises': [
           'error',
           {
