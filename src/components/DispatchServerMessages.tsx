@@ -1,11 +1,18 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 import { useStore } from '../hooks/store';
 import { useWs } from '../hooks/ws';
 
 const DispatchServerMessages: FC = () => {
-  const { state, dispatch } = useStore();
+  const { dispatch } = useStore();
 
-  useWs(state.userData.token, dispatch);
+  const handlerAdded = useRef(false);
+
+  const { addMessageHandler } = useWs();
+
+  if (!handlerAdded.current) {
+    addMessageHandler(dispatch);
+    handlerAdded.current = true;
+  }
 
   return null;
 };

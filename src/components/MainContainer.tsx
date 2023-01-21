@@ -7,6 +7,7 @@ import Store from './Store';
 import Container from './styled/Container';
 import Welcome from './Welcome';
 import DispatchServerMessages from './DispatchServerMessages';
+import WsConnection from './WsConnection';
 
 const MainContainer = () => {
   const [userData, setUserData] = useState(getUserData());
@@ -22,10 +23,12 @@ const MainContainer = () => {
     <Container maxWidth={theme.mainContainerMaxWidth}>
       {userData ? (
         <Store userData={userData}>
-          <>
-            <DispatchServerMessages />
-            <Rooms />
-          </>
+          <WsConnection>
+            <>
+              <DispatchServerMessages />
+              <Rooms />
+            </>
+          </WsConnection>
         </Store>
       ) : (
         <Welcome setUserData={onUserData} />

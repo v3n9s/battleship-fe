@@ -50,7 +50,7 @@ const RoomsItem: FC<{
 }> = ({ room, openModal, closeModal }) => {
   const { state } = useStore();
 
-  const { send } = useWs(state.userData.token);
+  const { send } = useWs();
 
   const joinWithPassword = useCallback<OnPasswordSubmit>(
     ({ password }) => {

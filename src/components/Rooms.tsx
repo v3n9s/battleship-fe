@@ -39,7 +39,7 @@ const Rooms: FC = () => {
 
   const { state } = useStore();
 
-  const { send } = useWs(state.userData.token);
+  const { send } = useWs();
 
   const createRoom = useCallback(
     (payload: CreateRoomMessage) => {
