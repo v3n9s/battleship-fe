@@ -12,14 +12,15 @@ const StyledRoomsItem = styled.div`
 `;
 
 const StyledInfo = styled.div`
-  flex: 1 0 1px;
+  flex: 1 0 100px;
 `;
 
 const StyledTitle = styled.div`
   border-bottom: 2px solid ${(props) => props.theme.primaryColor};
   font-size: 32px;
   text-align: center;
-  word-break: break-all;
+  word-break: normal;
+  overflow-wrap: anywhere;
 `;
 
 const StyledPlayers = styled.div`
@@ -30,9 +31,11 @@ const StyledPlayers = styled.div`
 `;
 
 const StyledPlayer = styled.div<{ isEmpty?: boolean }>`
-  color: ${(props) => (props.isEmpty ? props.theme.primaryColor : 'auto')};
+  color: ${(props) =>
+    props.isEmpty ? props.theme.primaryColor : 'currentcolor'};
   padding: 5px;
-  word-break: break-all;
+  word-break: normal;
+  overflow-wrap: anywhere;
 `;
 
 const ButtonsList = styled.div`
