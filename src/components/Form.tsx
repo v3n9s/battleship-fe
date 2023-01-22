@@ -40,10 +40,12 @@ const Form = <
   fields,
   onSubmit: onSubmitCallback,
   submitButtonText,
+  isLoading = false,
 }: {
   fields: T;
   onSubmit: (fields: U) => void;
   submitButtonText: string;
+  isLoading?: boolean;
 }): ReactElement => {
   const [formValues, setFormValues] = useState(
     Object.fromEntries(
@@ -86,7 +88,9 @@ const Form = <
           </Fragment>
         ))}
       </List>
-      <Button type="submit">{submitButtonText}</Button>
+      <Button type="submit" isLoading={isLoading}>
+        {submitButtonText}
+      </Button>
     </StyledForm>
   );
 };
