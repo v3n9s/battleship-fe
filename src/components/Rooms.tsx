@@ -39,13 +39,27 @@ const Rooms: FC = () => {
 
   const { state } = useStore();
 
-  const { send } = useWs();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { send, awaitMessage } = useWs();
 
   const createRoom = useCallback(
-    (payload: CreateRoomMessage) => {
+    async (payload: CreateRoomMessage) => {
       send({ type: 'CreateRoom', payload });
+      setIsLoading(true);
+      await Promise.any([
+        awaitMessage({
+          type: 'RoomCreate',
+          payload: { player1: { id: state.userData.user.id } },
+        }),
+        awaitMessage({
+          type: 'Error',
+          payload: { text: 'Message data is wrong' },
+        }),
+      ]);
+      setIsLoading(false);
     },
-    [send],
+    [send, awaitMessage, state.userData.user.id],
   );
 
   const createRoomFormFields = useRef({
@@ -72,6 +86,7 @@ const Rooms: FC = () => {
         fields={createRoomFormFields}
         onSubmit={createRoom}
         submitButtonText="Create room"
+        isLoading={isLoading}
       />
       <RoomsList>
         {!state.serverResponded ? (
