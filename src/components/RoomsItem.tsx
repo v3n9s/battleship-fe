@@ -1,7 +1,7 @@
 import { Room } from '../types';
 import { FC, useCallback } from 'react';
 import { useWs } from '../hooks/ws';
-import StyledButton from './styled/Button';
+import Button from './styled/Button';
 import styled from 'styled-components';
 import { OnPasswordSubmit } from './PasswordModal';
 import { useStore } from '../hooks/store';
@@ -35,10 +35,15 @@ const StyledPlayer = styled.div<{ isEmpty?: boolean }>`
   word-break: break-all;
 `;
 
-const Button = styled(StyledButton)`
-  flex: 0 0 100px;
-  border: none;
+const ButtonsList = styled.div`
+  display: flex;
+  gap: 2px;
+  background-color: ${(props) => props.theme.primaryColor};
   border-left: 2px solid ${(props) => props.theme.primaryColor};
+
+  > * {
+    min-width: 100px;
+  }
 `;
 
 export type SetOnPasswordSubmit = (cb: OnPasswordSubmit) => void;
@@ -90,12 +95,20 @@ const RoomsItem: FC<{
           </StyledPlayer>
         </StyledPlayers>
       </StyledInfo>
-      {state.userData.user.id === room.player1.id ||
-      state.userData.user.id === room.player2?.id ? (
-        <Button onClick={leave}>leave</Button>
-      ) : (
-        !room.player2?.id && <Button onClick={join}>join</Button>
-      )}
+      <ButtonsList>
+        {state.userData.user.id === room.player1.id ||
+        state.userData.user.id === room.player2?.id ? (
+          <Button onClick={leave} borderless>
+            leave
+          </Button>
+        ) : (
+          !room.player2?.id && (
+            <Button onClick={join} borderless>
+              join
+            </Button>
+          )
+        )}
+      </ButtonsList>
     </StyledRoomsItem>
   );
 };
