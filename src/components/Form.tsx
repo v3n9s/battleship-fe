@@ -33,6 +33,11 @@ type Field = {
   value: string;
 };
 
+export type OnSubmitCallback<T extends { [k: string]: string }> = (
+  fields: T,
+  setValues: (values: T) => void,
+) => void;
+
 const Form = <
   T extends { [k: string]: Field },
   U extends { [K in keyof T]: string },
@@ -43,7 +48,7 @@ const Form = <
   isLoading = false,
 }: {
   fields: T;
-  onSubmit: (fields: U) => void;
+  onSubmit: OnSubmitCallback<U>;
   submitButtonText: string;
   isLoading?: boolean;
 }): ReactElement => {
@@ -63,12 +68,7 @@ const Form = <
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      onSubmitCallback(formValues);
-      setFormValues(
-        Object.fromEntries(
-          Object.entries(formValues).map(([k]) => [k, '']),
-        ) as U,
-      );
+      onSubmitCallback(formValues, setFormValues);
     },
     [onSubmitCallback, formValues],
   );
@@ -84,6 +84,7 @@ const Form = <
               type={type}
               value={formValues[name]}
               onChange={onChange}
+              isLoading={isLoading}
             />
           </Fragment>
         ))}
