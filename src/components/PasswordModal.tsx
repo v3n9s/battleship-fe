@@ -1,5 +1,7 @@
-import { FC, useRef } from 'react';
+import { FC, useCallback, useRef } from 'react';
 import styled from 'styled-components';
+import { useStore } from '../hooks/store';
+import { useWs } from '../hooks/ws';
 import Form from './Form';
 import Modal from './Modal';
 
@@ -12,13 +14,27 @@ const StyledPasswordModal = styled.div`
   border: 2px solid ${(props) => props.theme.primaryColor};
 `;
 
-export type OnPasswordSubmit = (fields: { password: string }) => void;
+const PasswordModal: FC = () => {
+  const { dispatch, state } = useStore();
 
-const PasswordModal: FC<{
-  isOpen: boolean;
-  onSubmit: OnPasswordSubmit;
-  closeModal: () => void;
-}> = ({ isOpen, onSubmit, closeModal }) => {
+  const { send } = useWs();
+
+  const closeModal = useCallback(() => {
+    dispatch({ type: 'ClosePasswordModal' });
+  }, [dispatch]);
+
+  const join = useCallback(
+    (roomId: string) =>
+      ({ password }: { password: string }) => {
+        send({
+          type: 'JoinRoom',
+          payload: { roomId, password },
+        });
+        closeModal();
+      },
+    [send, closeModal],
+  );
+
   const formFields = useRef({
     password: {
       type: 'password',
@@ -27,10 +43,14 @@ const PasswordModal: FC<{
     },
   }).current;
 
-  return isOpen ? (
+  return state.passwordModal.roomId ? (
     <Modal closeModal={closeModal}>
       <StyledPasswordModal>
-        <Form fields={formFields} onSubmit={onSubmit} submitButtonText="join" />
+        <Form
+          fields={formFields}
+          onSubmit={join(state.passwordModal.roomId)}
+          submitButtonText="join"
+        />
       </StyledPasswordModal>
     </Modal>
   ) : null;

@@ -3,7 +3,6 @@ import { FC, useCallback } from 'react';
 import { useWs } from '../hooks/ws';
 import Button from './styled/Button';
 import styled from 'styled-components';
-import { OnPasswordSubmit } from './PasswordModal';
 import { useStore } from '../hooks/store';
 
 const StyledRoomsItem = styled.div`
@@ -49,35 +48,21 @@ const ButtonsList = styled.div`
   }
 `;
 
-export type SetOnPasswordSubmit = (cb: OnPasswordSubmit) => void;
-
-const RoomsItem: FC<{
-  room: Room;
-  openModal: SetOnPasswordSubmit;
-  closeModal: () => void;
-}> = ({ room, openModal, closeModal }) => {
-  const { state } = useStore();
+const RoomsItem: FC<{ room: Room }> = ({ room }) => {
+  const { dispatch, state } = useStore();
 
   const { send } = useWs();
 
-  const joinWithPassword = useCallback<OnPasswordSubmit>(
-    ({ password }) => {
-      send({
-        type: 'JoinRoom',
-        payload: { roomId: room.id, password },
-      });
-      closeModal();
-    },
-    [send, room.id, closeModal],
-  );
+  const openModal = useCallback(() => {
+    dispatch({ type: 'OpenPasswordModal', payload: { roomId: room.id } });
+  }, [dispatch, room.id]);
 
   const join = useCallback(() => {
-    if (room.hasPassword) {
-      openModal(joinWithPassword);
-    } else {
-      joinWithPassword({ password: '' });
-    }
-  }, [room.hasPassword, openModal, joinWithPassword]);
+    send({
+      type: 'JoinRoom',
+      payload: { roomId: room.id, password: '' },
+    });
+  }, [send, room.id]);
 
   const leave = useCallback(() => {
     send({
@@ -106,7 +91,7 @@ const RoomsItem: FC<{
           </Button>
         ) : (
           !room.player2?.id && (
-            <Button onClick={join} borderless>
+            <Button onClick={room.hasPassword ? openModal : join} borderless>
               join
             </Button>
           )

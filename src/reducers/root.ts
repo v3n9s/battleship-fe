@@ -4,9 +4,26 @@ export type RootReducerType = {
   userData: UserData;
   rooms: Room[];
   serverResponded: boolean;
+  passwordModal: {
+    roomId: string | null;
+  };
 };
 
-export type RootReducerActionType = ServerMessage;
+type OpenPasswordModalAction = {
+  type: 'OpenPasswordModal';
+  payload: {
+    roomId: string;
+  };
+};
+
+type ClosePasswordModalAction = {
+  type: 'ClosePasswordModal';
+};
+
+export type RootReducerActionType =
+  | OpenPasswordModalAction
+  | ClosePasswordModalAction
+  | ServerMessage;
 
 export const rootReducer = (
   state: RootReducerType,
@@ -45,6 +62,16 @@ export const rootReducer = (
     return {
       ...state,
       rooms: state.rooms.filter((r) => r.id !== action.payload.roomId),
+    };
+  } else if (action.type === 'OpenPasswordModal') {
+    return {
+      ...state,
+      passwordModal: { roomId: action.payload.roomId },
+    };
+  } else if (action.type === 'ClosePasswordModal') {
+    return {
+      ...state,
+      passwordModal: { roomId: null },
     };
   }
   return state;

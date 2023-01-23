@@ -4,7 +4,7 @@ import Form, { OnSubmitCallback } from './Form';
 import RoomsItem from './RoomsItem';
 import { useWs } from '../hooks/ws';
 import styled from 'styled-components';
-import PasswordModal, { OnPasswordSubmit } from './PasswordModal';
+import PasswordModal from './PasswordModal';
 import { useStore } from '../hooks/store';
 
 const StyledRooms = styled.div`
@@ -24,19 +24,6 @@ const StatusText = styled.div`
 `;
 
 const Rooms: FC = () => {
-  const [modal, setModal] = useState<{
-    isOpen: boolean;
-    onSubmit: OnPasswordSubmit;
-  }>({ isOpen: false, onSubmit: () => undefined });
-
-  const openModal = useCallback((cb: OnPasswordSubmit) => {
-    setModal({ isOpen: true, onSubmit: cb });
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setModal((prevState) => ({ ...prevState, isOpen: false }));
-  }, []);
-
   const { state } = useStore();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -78,11 +65,7 @@ const Rooms: FC = () => {
 
   return (
     <StyledRooms>
-      <PasswordModal
-        isOpen={modal.isOpen}
-        onSubmit={modal.onSubmit}
-        closeModal={closeModal}
-      />
+      <PasswordModal />
       <Form
         fields={createRoomFormFields}
         onSubmit={createRoom}
@@ -95,14 +78,7 @@ const Rooms: FC = () => {
         ) : state.rooms.length === 0 ? (
           <StatusText>There is no rooms yet</StatusText>
         ) : (
-          state.rooms.map((room) => (
-            <RoomsItem
-              key={room.id}
-              room={room}
-              openModal={openModal}
-              closeModal={closeModal}
-            />
-          ))
+          state.rooms.map((room) => <RoomsItem key={room.id} room={room} />)
         )}
       </RoomsList>
     </StyledRooms>
