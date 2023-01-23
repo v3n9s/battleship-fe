@@ -1,6 +1,6 @@
 import { FC, useCallback, useRef, useState } from 'react';
 import { CreateRoomMessage } from '../types';
-import Form from './Form';
+import Form, { OnSubmitCallback } from './Form';
 import RoomsItem from './RoomsItem';
 import { useWs } from '../hooks/ws';
 import styled from 'styled-components';
@@ -43,8 +43,8 @@ const Rooms: FC = () => {
 
   const { send, awaitMessage } = useWs();
 
-  const createRoom = useCallback(
-    async (payload: CreateRoomMessage) => {
+  const createRoom: OnSubmitCallback<CreateRoomMessage> = useCallback(
+    async (payload, setValues) => {
       send({ type: 'CreateRoom', payload });
       setIsLoading(true);
       await Promise.any([
@@ -58,6 +58,7 @@ const Rooms: FC = () => {
         }),
       ]);
       setIsLoading(false);
+      setValues({ name: '', password: '' });
     },
     [send, awaitMessage, state.userData.user.id],
   );
