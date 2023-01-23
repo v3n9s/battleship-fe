@@ -1,7 +1,7 @@
-import { FC, useCallback, useRef } from 'react';
+import { FC, useCallback, useRef, useState } from 'react';
 import { UserData } from '../types';
 import config from '../config';
-import Form from './Form';
+import Form, { OnSubmitCallback } from './Form';
 import styled from 'styled-components';
 
 const StyledWelcome = styled.div`
@@ -14,9 +14,12 @@ const StyledWelcome = styled.div`
 const Welcome: FC<{
   setUserData: (data: UserData) => void;
 }> = ({ setUserData }) => {
-  const submitName = useCallback(
-    async ({ name }: { name: string }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const submitName: OnSubmitCallback<{ name: string }> = useCallback(
+    async ({ name }) => {
       if (name.length >= 1 && name.length <= 32) {
+        setIsLoading(true);
         const response = await fetch(
           `${config.httpBackendUrl}/token?name=${name}`,
           {
@@ -44,6 +47,7 @@ const Welcome: FC<{
         }
         onSubmit={submitName}
         submitButtonText="Submit"
+        isLoading={isLoading}
       />
     </StyledWelcome>
   );
