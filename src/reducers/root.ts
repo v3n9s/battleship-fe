@@ -24,7 +24,13 @@ export const rootReducer = (
       ...state,
       rooms: state.rooms.map((r) =>
         r.id === action.payload.roomId
-          ? { ...r, player2: action.payload.user }
+          ? {
+              ...r,
+              player2: {
+                ...action.payload.user,
+                readyToPlay: false,
+              },
+            }
           : r,
       ),
     };

@@ -50,7 +50,7 @@ const Rooms: FC = () => {
       await Promise.any([
         awaitMessage({
           type: 'RoomCreate',
-          payload: { player1: { id: state.userData.user.id } },
+          payload: { player1: { id: state.userData.id } },
         }),
         awaitMessage({
           type: 'Error',
@@ -60,7 +60,7 @@ const Rooms: FC = () => {
       setIsLoading(false);
       setValues({ name: '', password: '' });
     },
-    [send, awaitMessage, state.userData.user.id],
+    [send, awaitMessage, state.userData.id],
   );
 
   const createRoomFormFields = useRef({

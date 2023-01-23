@@ -99,8 +99,8 @@ const RoomsItem: FC<{
         </StyledPlayers>
       </StyledInfo>
       <ButtonsList>
-        {state.userData.user.id === room.player1.id ||
-        state.userData.user.id === room.player2?.id ? (
+        {state.userData.id === room.player1.id ||
+        state.userData.id === room.player2?.id ? (
           <Button onClick={leave} borderless>
             leave
           </Button>
