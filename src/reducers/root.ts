@@ -6,6 +6,91 @@ const getEmptyField = () => {
     .map((v) => [...(v as boolean[])]);
 };
 
+const getCellsAround = ([colInd, rowInd]: [number, number]): [
+  number,
+  number,
+][] => {
+  return [
+    [colInd - 1, rowInd - 1],
+    [colInd - 1, rowInd],
+    [colInd - 1, rowInd + 1],
+    [colInd, rowInd - 1],
+    [colInd, rowInd + 1],
+    [colInd + 1, rowInd - 1],
+    [colInd + 1, rowInd],
+    [colInd + 1, rowInd + 1],
+  ];
+};
+
+const getAllCells = (cells: [number, number][]): [number, number][] => {
+  return cells
+    .map((cell) => [cell, ...getCellsAround(cell)])
+    .flat()
+    .reduce((acc, [rowInd, colInd]) => {
+      if (
+        !acc.some(
+          ([uniqueRowInd, uniqueColInd]) =>
+            uniqueRowInd === rowInd && uniqueColInd === colInd,
+        )
+      ) {
+        acc.push([rowInd, colInd]);
+      }
+      return acc;
+    }, [] as [number, number][]);
+};
+
+const isFree = (field: Field, cells: [number, number][]) => {
+  return getAllCells(cells).every(
+    ([rowInd, colInd]) => !field[rowInd]?.[colInd],
+  );
+};
+
+const getRandomShip = (size: number) => {
+  const isHorizontal = Math.random() > 0.5;
+  let rowInd = Math.floor(Math.random() * 10);
+  let colInd = Math.floor(Math.random() * (10 - size + 1));
+  if (isHorizontal) {
+    [rowInd, colInd] = [colInd, rowInd];
+  }
+  return new Array(size)
+    .fill([rowInd, colInd])
+    .map(
+      ([rowInd, colInd]: [number, number], i) =>
+        (isHorizontal ? [rowInd + i, colInd] : [rowInd, colInd + i]) as [
+          number,
+          number,
+        ],
+    );
+};
+
+const setRandomShips = (field: Field, size: number, amount: number) => {
+  if (amount === 0) {
+    return;
+  }
+
+  let shipCells;
+  do {
+    shipCells = getRandomShip(size);
+  } while (!isFree(field, shipCells));
+
+  shipCells.forEach(([rowInd, y]) => {
+    const row = field[rowInd];
+    if (row) {
+      row[y] = true;
+    }
+  });
+  setRandomShips(field, size, amount - 1);
+};
+
+const getRandomField = () => {
+  const field = getEmptyField();
+  setRandomShips(field, 4, 1);
+  setRandomShips(field, 3, 2);
+  setRandomShips(field, 2, 3);
+  setRandomShips(field, 1, 4);
+  return field;
+};
+
 export type RootReducerType = {
   userData: UserData;
   rooms: Room[];
@@ -58,6 +143,13 @@ type SetPositionsAction = {
   };
 };
 
+type SetRandomPositionsAction = {
+  type: 'SetRandomPositions';
+  payload: {
+    roomId: string;
+  };
+};
+
 export type RootReducerActionType =
   | OpenPasswordModalAction
   | ClosePasswordModalAction
@@ -65,6 +157,7 @@ export type RootReducerActionType =
   | ClosePositionsModalAction
   | ResetPositionsAction
   | SetPositionsAction
+  | SetRandomPositionsAction
   | ServerMessage;
 
 export const rootReducer = (
@@ -139,6 +232,14 @@ export const rootReducer = (
       positions: {
         ...state.positions,
         [action.payload.roomId]: action.payload.field,
+      },
+    };
+  } else if (action.type === 'SetRandomPositions') {
+    return {
+      ...state,
+      positions: {
+        ...state.positions,
+        [action.payload.roomId]: getRandomField(),
       },
     };
   }

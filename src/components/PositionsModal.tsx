@@ -34,6 +34,17 @@ const PositionsModal: FC = () => {
     dispatch({ type: 'ClosePositionsModal' });
   }, [dispatch]);
 
+  const random = useCallback(() => {
+    if (state.positionsModal.roomId) {
+      dispatch({
+        type: 'SetRandomPositions',
+        payload: {
+          roomId: state.positionsModal.roomId,
+        },
+      });
+    }
+  }, [state.positionsModal.roomId, dispatch]);
+
   const reset = useCallback(() => {
     if (state.positionsModal.roomId) {
       dispatch({
@@ -77,6 +88,7 @@ const PositionsModal: FC = () => {
       <>
         <Positions positions={positions} onCheck={onCheck} />
         <ButtonsRow>
+          <Button onClick={random}>random</Button>
           <Button onClick={reset}>reset</Button>
           <Button onClick={submit}>submit</Button>
         </ButtonsRow>
