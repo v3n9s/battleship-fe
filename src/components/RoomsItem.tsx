@@ -53,8 +53,12 @@ const RoomsItem: FC<{ room: Room }> = ({ room }) => {
 
   const { send } = useWs();
 
-  const openModal = useCallback(() => {
+  const openPasswordModal = useCallback(() => {
     dispatch({ type: 'OpenPasswordModal', payload: { roomId: room.id } });
+  }, [dispatch, room.id]);
+
+  const openPositionsModal = useCallback(() => {
+    dispatch({ type: 'OpenPositionsModal', payload: { roomId: room.id } });
   }, [dispatch, room.id]);
 
   const join = useCallback(() => {
@@ -84,6 +88,12 @@ const RoomsItem: FC<{ room: Room }> = ({ room }) => {
         </StyledPlayers>
       </StyledInfo>
       <ButtonsList>
+        {(state.userData.id === room.player1.id ||
+          state.userData.id === room.player2?.id) && (
+          <Button onClick={openPositionsModal} borderless>
+            position
+          </Button>
+        )}
         {state.userData.id === room.player1.id ||
         state.userData.id === room.player2?.id ? (
           <Button onClick={leave} borderless>
@@ -91,7 +101,10 @@ const RoomsItem: FC<{ room: Room }> = ({ room }) => {
           </Button>
         ) : (
           !room.player2?.id && (
-            <Button onClick={room.hasPassword ? openModal : join} borderless>
+            <Button
+              onClick={room.hasPassword ? openPasswordModal : join}
+              borderless
+            >
               join
             </Button>
           )

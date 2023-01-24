@@ -14,6 +14,10 @@ const Store: FC<{ children?: ReactElement; userData: UserData }> = ({
     passwordModal: {
       roomId: null,
     },
+    positions: {},
+    positionsModal: {
+      roomId: null,
+    },
   });
 
   return (

@@ -6,6 +6,7 @@ import { useWs } from '../hooks/ws';
 import styled from 'styled-components';
 import PasswordModal from './PasswordModal';
 import { useStore } from '../hooks/store';
+import PositionsModal from './PositionsModal';
 
 const StyledRooms = styled.div`
   padding: 10px;
@@ -66,6 +67,7 @@ const Rooms: FC = () => {
   return (
     <StyledRooms>
       <PasswordModal />
+      <PositionsModal />
       <Form
         fields={createRoomFormFields}
         onSubmit={createRoom}

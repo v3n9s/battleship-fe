@@ -1,4 +1,10 @@
-import { Room, ServerMessage, UserData } from '../types';
+import { Field, Room, ServerMessage, UserData } from '../types';
+
+const getEmptyField = () => {
+  return new Array(10)
+    .fill(new Array(10).fill(false))
+    .map((v) => [...(v as boolean[])]);
+};
 
 export type RootReducerType = {
   userData: UserData;
@@ -6,6 +12,12 @@ export type RootReducerType = {
   serverResponded: boolean;
   passwordModal: {
     roomId: string | null;
+  };
+  positionsModal: {
+    roomId: string | null;
+  };
+  positions: {
+    [roomId: string]: Field;
   };
 };
 
@@ -20,9 +32,39 @@ type ClosePasswordModalAction = {
   type: 'ClosePasswordModal';
 };
 
+type OpenPositionsModalAction = {
+  type: 'OpenPositionsModal';
+  payload: {
+    roomId: string;
+  };
+};
+
+type ClosePositionsModalAction = {
+  type: 'ClosePositionsModal';
+};
+
+type ResetPositionsAction = {
+  type: 'ResetPositions';
+  payload: {
+    roomId: string;
+  };
+};
+
+type SetPositionsAction = {
+  type: 'SetPositions';
+  payload: {
+    roomId: string;
+    field: Field;
+  };
+};
+
 export type RootReducerActionType =
   | OpenPasswordModalAction
   | ClosePasswordModalAction
+  | OpenPositionsModalAction
+  | ClosePositionsModalAction
+  | ResetPositionsAction
+  | SetPositionsAction
   | ServerMessage;
 
 export const rootReducer = (
@@ -72,6 +114,32 @@ export const rootReducer = (
     return {
       ...state,
       passwordModal: { roomId: null },
+    };
+  } else if (action.type === 'OpenPositionsModal') {
+    return {
+      ...state,
+      positionsModal: { roomId: action.payload.roomId },
+    };
+  } else if (action.type === 'ClosePositionsModal') {
+    return {
+      ...state,
+      positionsModal: { roomId: null },
+    };
+  } else if (action.type === 'ResetPositions') {
+    return {
+      ...state,
+      positions: {
+        ...state.positions,
+        [action.payload.roomId]: getEmptyField(),
+      },
+    };
+  } else if (action.type === 'SetPositions') {
+    return {
+      ...state,
+      positions: {
+        ...state.positions,
+        [action.payload.roomId]: action.payload.field,
+      },
     };
   }
   return state;
