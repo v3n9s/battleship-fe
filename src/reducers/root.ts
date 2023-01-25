@@ -201,6 +201,11 @@ export const rootReducer = (
     return {
       ...state,
       rooms: state.rooms.filter((r) => r.id !== action.payload.roomId),
+      positions: Object.fromEntries(
+        Object.entries(state.positions).filter(
+          ([roomId]) => roomId !== action.payload.roomId,
+        ),
+      ),
     };
   } else if (action.type === 'OpenPasswordModal') {
     return {
