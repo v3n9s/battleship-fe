@@ -6,7 +6,7 @@ const getEmptyField = () => {
     .map((v) => [...(v as boolean[])]);
 };
 
-const getCellsAround = ([colInd, rowInd]: [number, number]): [
+const getCellsAroundCell = ([colInd, rowInd]: [number, number]): [
   number,
   number,
 ][] => {
@@ -22,15 +22,19 @@ const getCellsAround = ([colInd, rowInd]: [number, number]): [
   ];
 };
 
-const getAllCells = (cells: [number, number][]): [number, number][] => {
+const getCellsAroundCells = (cells: [number, number][]): [number, number][] => {
   return cells
-    .map((cell) => [cell, ...getCellsAround(cell)])
+    .map((cell) => getCellsAroundCell(cell))
     .flat()
     .reduce((acc, [rowInd, colInd]) => {
       if (
         !acc.some(
           ([uniqueRowInd, uniqueColInd]) =>
             uniqueRowInd === rowInd && uniqueColInd === colInd,
+        ) &&
+        !cells.some(
+          ([shipRowInd, shipColInd]) =>
+            shipRowInd === rowInd && shipColInd === colInd,
         )
       ) {
         acc.push([rowInd, colInd]);
@@ -40,7 +44,7 @@ const getAllCells = (cells: [number, number][]): [number, number][] => {
 };
 
 const isFree = (field: Field, cells: [number, number][]) => {
-  return getAllCells(cells).every(
+  return [...cells, ...getCellsAroundCells(cells)].every(
     ([rowInd, colInd]) => !field[rowInd]?.[colInd],
   );
 };
