@@ -8,7 +8,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { WsContext } from '../contexts/ws';
 import { deepSatisfies } from '../utils';
 
-type MessageHandler = (m: ServerMessage) => void;
+export type MessageHandler = (m: ServerMessage) => void;
 
 type DeepPartial<T extends object> = {
   [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
@@ -96,5 +96,11 @@ export const useWs = () => {
     [addMessageHandler, removeMessageHandler],
   );
 
-  return { send, awaitMessage, addMessageHandler, isConnecting };
+  return {
+    send,
+    awaitMessage,
+    addMessageHandler,
+    removeMessageHandler,
+    isConnecting,
+  };
 };
