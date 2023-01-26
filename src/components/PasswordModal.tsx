@@ -1,7 +1,8 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '../hooks/store';
-import { useWs } from '../hooks/ws';
-import Form from './Form';
+import { MessageHandler, useWs } from '../hooks/ws';
+import { deepSatisfies } from '../utils';
+import Form, { OnSubmitCallback } from './Form';
 import Modal from './Modal';
 
 const PasswordModal: FC = () => {
@@ -9,7 +10,7 @@ const PasswordModal: FC = () => {
 
   const [isOpen, setIsOpen] = useState(true);
 
-  const { send } = useWs();
+  const { send, addMessageHandler, removeMessageHandler } = useWs();
 
   const onModalClose = useCallback(() => {
     dispatch({ type: 'ClosePasswordModal' });
@@ -17,14 +18,34 @@ const PasswordModal: FC = () => {
 
   const join = useCallback(
     (roomId: string) =>
-      ({ password }: { password: string }) => {
+      (({ password }, setValues) => {
         send({
           type: 'JoinRoom',
           payload: { roomId, password },
         });
-        setIsOpen(false);
-      },
-    [send],
+        const handler: MessageHandler = (message) => {
+          removeMessageHandler(handler);
+          if (
+            deepSatisfies(message, {
+              type: 'RoomJoin',
+              payload: {
+                roomId,
+                user: {
+                  id: state.userData.id,
+                },
+              },
+            })
+          ) {
+            setIsOpen(false);
+          } else {
+            setValues({
+              password: '',
+            });
+          }
+        };
+        addMessageHandler(handler);
+      }) satisfies OnSubmitCallback<{ password: string }>,
+    [send, addMessageHandler, removeMessageHandler, state.userData.id],
   );
 
   useEffect(() => {
