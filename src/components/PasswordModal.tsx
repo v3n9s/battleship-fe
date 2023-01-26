@@ -1,4 +1,4 @@
-import { FC, useCallback, useRef } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '../hooks/store';
 import { useWs } from '../hooks/ws';
 import Form from './Form';
@@ -7,9 +7,11 @@ import Modal from './Modal';
 const PasswordModal: FC = () => {
   const { dispatch, state } = useStore();
 
+  const [isOpen, setIsOpen] = useState(true);
+
   const { send } = useWs();
 
-  const closeModal = useCallback(() => {
+  const onModalClose = useCallback(() => {
     dispatch({ type: 'ClosePasswordModal' });
   }, [dispatch]);
 
@@ -20,10 +22,16 @@ const PasswordModal: FC = () => {
           type: 'JoinRoom',
           payload: { roomId, password },
         });
-        closeModal();
+        setIsOpen(false);
       },
-    [send, closeModal],
+    [send],
   );
+
+  useEffect(() => {
+    if (state.passwordModal.roomId) {
+      setIsOpen(true);
+    }
+  }, [state.passwordModal.roomId]);
 
   const formFields = useRef({
     password: {
@@ -34,7 +42,7 @@ const PasswordModal: FC = () => {
   }).current;
 
   return state.passwordModal.roomId ? (
-    <Modal closeModal={closeModal} maxWidth={400}>
+    <Modal onClose={onModalClose} maxWidth={400} isOpen={isOpen}>
       <Form
         fields={formFields}
         onSubmit={join(state.passwordModal.roomId)}

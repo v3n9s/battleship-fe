@@ -84,7 +84,7 @@ const PositionsModal: FC = () => {
   }, [send, state.positionsModal, state.positions]);
 
   return positions ? (
-    <Modal closeModal={closeModal} maxWidth={800}>
+    <Modal onClose={closeModal} maxWidth={800} isOpen={true}>
       <>
         <Positions positions={positions} onCheck={onCheck} />
         <ButtonsRow>
