@@ -23,6 +23,7 @@ const StyledCell = styled.div<{ checked: boolean }>`
   background-color: ${(props) =>
     props.checked ? props.theme.primaryColor : props.theme.backgroundColor};
   border: 1px solid ${(props) => props.theme.primaryColor};
+  transition: background-color 0.15s linear;
 `;
 
 const Positions: FC<{
