@@ -1,5 +1,6 @@
-import { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, ReactNode, useEffect, useRef } from 'react';
 import styled, { css, keyframes } from 'styled-components';
+import { AnimationState, useAnimation } from '../hooks/animation';
 
 const StyledWrapper = styled.div`
   position: fixed;
@@ -19,17 +20,17 @@ const opacityAnimation = keyframes`
   }
 `;
 
-const StyledOverlay = styled.div<{ state: ModalState }>`
+const StyledOverlay = styled.div<{ state: AnimationState }>`
   position: absolute;
   width: 100%;
   height: 100%;
   background-color: ${(props) => props.theme.overlayColor};
   animation: ${(props) =>
-    props.state === 'opening'
+    props.state === 'entering'
       ? css`
           ${opacityAnimation} 0.25s
         `
-      : props.state === 'closing'
+      : props.state === 'exiting'
       ? css`
           ${opacityAnimation} 0.25s 0.35s reverse forwards
         `
@@ -54,7 +55,7 @@ const translateAnimation = keyframes`
 
 const StyledModalBody = styled.div<{
   maxWidth?: number | undefined;
-  state: ModalState;
+  state: AnimationState;
 }>`
   margin: 10px auto;
   max-width: ${(props) =>
@@ -64,11 +65,11 @@ const StyledModalBody = styled.div<{
   background-color: ${(props) => props.theme.backgroundColor};
   border: 2px solid ${(props) => props.theme.primaryColor};
   animation: ${(props) =>
-    props.state === 'opening'
+    props.state === 'entering'
       ? css`
           ${translateAnimation} 0.5s, ${opacityAnimation} 0.5s 0.1s backwards
         `
-      : props.state === 'closing'
+      : props.state === 'exiting'
       ? css`
           ${translateAnimation} 0.5s reverse forwards, ${opacityAnimation} 0.5s reverse forwards
         `
@@ -77,56 +78,27 @@ const StyledModalBody = styled.div<{
   overflow-y: auto;
 `;
 
-type ModalState = 'opening' | 'opened' | 'closing';
-
 const Modal: FC<{
   children: ReactNode;
   onClose: () => void;
   maxWidth?: number | undefined;
   isOpen: boolean;
 }> = ({ children, isOpen, onClose, maxWidth }) => {
-  const [state, setState] = useState<ModalState>('opening');
+  const parentRef = useRef<HTMLDivElement>(null);
 
-  const overlayRef = useRef<HTMLDivElement>(null);
-
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (state === 'opening' || state === 'closing') {
-      const elem = state === 'opening' ? modalRef.current : overlayRef.current;
-      if (elem) {
-        const cb = () => {
-          if (state === 'opening') {
-            setState('opened');
-          } else {
-            onClose();
-          }
-        };
-        elem.addEventListener('animationend', cb, { once: true });
-        return () => {
-          elem.removeEventListener('animationend', cb);
-        };
-      }
-    }
-  }, [state, onClose]);
-
-  const close = useCallback(() => {
-    if (state === 'opened') {
-      setState('closing');
-    }
-  }, [state]);
+  const { state, exit } = useAnimation(parentRef, onClose);
 
   useEffect(() => {
     if (!isOpen) {
-      close();
+      exit();
     }
-  }, [isOpen, close]);
+  }, [isOpen, exit]);
 
   return (
-    <StyledWrapper>
-      <StyledOverlay ref={overlayRef} onClick={close} state={state} />
+    <StyledWrapper ref={parentRef}>
+      <StyledOverlay onClick={exit} state={state} />
       <StyledModal>
-        <StyledModalBody ref={modalRef} maxWidth={maxWidth} state={state}>
+        <StyledModalBody maxWidth={maxWidth} state={state}>
           {children}
         </StyledModalBody>
       </StyledModal>
