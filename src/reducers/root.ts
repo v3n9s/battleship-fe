@@ -95,6 +95,12 @@ const getRandomField = () => {
   return field;
 };
 
+export type Alert = {
+  id: string;
+  text: string;
+  isShowed: boolean;
+};
+
 export type RootReducerType = {
   userData: UserData;
   rooms: Room[];
@@ -108,6 +114,7 @@ export type RootReducerType = {
   positions: {
     [roomId: string]: Field;
   };
+  alerts: Alert[];
 };
 
 type OpenPasswordModalAction = {
@@ -154,6 +161,28 @@ type SetRandomPositionsAction = {
   };
 };
 
+type ShowAlertAction = {
+  type: 'ShowAlert';
+  payload: {
+    id?: string;
+    text: string;
+  };
+};
+
+type HideAlertAction = {
+  type: 'HideAlert';
+  payload: {
+    id: string;
+  };
+};
+
+type RemoveAlertAction = {
+  type: 'RemoveAlert';
+  payload: {
+    id: string;
+  };
+};
+
 export type RootReducerActionType =
   | OpenPasswordModalAction
   | ClosePasswordModalAction
@@ -162,6 +191,9 @@ export type RootReducerActionType =
   | ResetPositionsAction
   | SetPositionsAction
   | SetRandomPositionsAction
+  | ShowAlertAction
+  | HideAlertAction
+  | RemoveAlertAction
   | ServerMessage;
 
 export const rootReducer = (
@@ -250,6 +282,30 @@ export const rootReducer = (
         ...state.positions,
         [action.payload.roomId]: getRandomField(),
       },
+    };
+  } else if (action.type === 'ShowAlert') {
+    return {
+      ...state,
+      alerts: [
+        ...state.alerts,
+        {
+          id: action.payload.id ?? crypto.randomUUID(),
+          text: action.payload.text,
+          isShowed: true,
+        },
+      ],
+    };
+  } else if (action.type === 'HideAlert') {
+    return {
+      ...state,
+      alerts: state.alerts.map((alert) =>
+        alert.id === action.payload.id ? { ...alert, isShowed: false } : alert,
+      ),
+    };
+  } else if (action.type === 'RemoveAlert') {
+    return {
+      ...state,
+      alerts: state.alerts.filter((alert) => alert.id !== action.payload.id),
     };
   }
   return state;

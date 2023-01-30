@@ -8,6 +8,7 @@ import Container from './styled/Container';
 import Welcome from './Welcome';
 import DispatchServerMessages from './DispatchServerMessages';
 import WsConnection from './WsConnection';
+import Alerts from './Alerts';
 
 const MainContainer = () => {
   const [userData, setUserData] = useState(getUserData());
@@ -27,6 +28,7 @@ const MainContainer = () => {
             <>
               <DispatchServerMessages />
               <Rooms />
+              <Alerts />
             </>
           </WsConnection>
         </Store>

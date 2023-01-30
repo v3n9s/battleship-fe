@@ -21,6 +21,7 @@ const Store: FC<{ children?: ReactElement; userData: UserData }> = ({
     positionsModal: {
       roomId: null,
     },
+    alerts: [],
   });
 
   const thunkDispatch = useCallback<RootReducerContextDispatch>(
