@@ -202,6 +202,8 @@ export const rootReducer = (
 ): RootReducerType => {
   if (action.type === 'ExistingRooms') {
     return { ...state, rooms: action.payload, serverResponded: true };
+  } else if (action.type === 'ExistingPositions') {
+    return { ...state, positions: action.payload };
   } else if (action.type === 'RoomCreate') {
     return {
       ...state,
