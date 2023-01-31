@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { useStore } from '../hooks/store';
 import { useWs } from '../hooks/ws';
 import Modal from './Modal';
@@ -16,6 +16,8 @@ const PositionsModal: FC = () => {
   const { dispatch, state } = useStore();
 
   const { send } = useWs();
+
+  const theme = useTheme();
 
   const positions = state.positionsModal.roomId
     ? state.positions[state.positionsModal.roomId]
@@ -86,7 +88,14 @@ const PositionsModal: FC = () => {
   return positions ? (
     <Modal onClose={closeModal} maxWidth={800} isOpen={true}>
       <>
-        <Positions positions={positions} onCheck={onCheck} />
+        <Positions
+          positions={positions.map((row) =>
+            row.map((cell) =>
+              cell ? theme.primaryColor : theme.backgroundColor,
+            ),
+          )}
+          onCheck={onCheck}
+        />
         <ButtonsRow>
           <Button onClick={random}>random</Button>
           <Button onClick={reset}>reset</Button>
