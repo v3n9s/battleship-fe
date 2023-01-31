@@ -241,6 +241,19 @@ export const rootReducer = (
         ),
       ),
     };
+  } else if (action.type === 'RoomReadyToPlay') {
+    return {
+      ...state,
+      rooms: state.rooms.map((r) =>
+        r.id === action.payload.roomId
+          ? r.player1.id === action.payload.userId
+            ? { ...r, player1: { ...r.player1, readyToPlay: true } }
+            : r.player2?.id === action.payload.userId
+            ? { ...r, player2: { ...r.player2, readyToPlay: true } }
+            : r
+          : r,
+      ),
+    };
   } else if (action.type === 'OpenPasswordModal') {
     return {
       ...state,
