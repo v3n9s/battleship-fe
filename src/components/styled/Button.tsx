@@ -24,8 +24,10 @@ const Button = styled.button.attrs<
       ? ''
       : css`
           border: 2px solid
-            ${(p) =>
-              props.isLoading ? p.theme.loadingColor : p.theme.primaryColor};
+            ${() =>
+              props.isLoading
+                ? props.theme.loadingColor
+                : props.theme.primaryColor};
         `}
   background-color: ${(props) =>
     props.isLoading ? props.theme.loadingColor : props.theme.primaryColor};
@@ -36,7 +38,7 @@ const Button = styled.button.attrs<
       ? ''
       : css`
           &:hover {
-            background-color: ${(props) => props.theme.backgroundColor};
+            background-color: ${() => props.theme.backgroundColor};
             cursor: pointer;
           }
         `}
