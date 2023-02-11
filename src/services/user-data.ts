@@ -5,6 +5,11 @@ export const saveUserData = (data: UserData) => {
 };
 
 export const getUserData = () => {
-  const userData = localStorage.getItem('user-data');
-  return userData ? (JSON.parse(userData) as UserData) : null;
+  try {
+    return JSON.parse(
+      localStorage.getItem('user-data') || 'null',
+    ) as UserData | null;
+  } catch {
+    return null;
+  }
 };
