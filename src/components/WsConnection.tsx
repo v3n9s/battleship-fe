@@ -1,4 +1,4 @@
-import { FC, ReactElement, useRef } from 'react';
+import { FC, ReactElement, useEffect, useState } from 'react';
 import config from '../config';
 import { WsContext } from '../contexts/ws';
 import { useStore } from '../hooks/store';
@@ -6,15 +6,19 @@ import { useStore } from '../hooks/store';
 const WsConnection: FC<{ children: ReactElement }> = ({ children }) => {
   const { state } = useStore();
 
-  const ws = useRef<null | WebSocket>(null);
+  const [ws, setWs] = useState<null | WebSocket>(null);
 
-  if (ws.current === null) {
-    ws.current = new WebSocket(
+  useEffect(() => {
+    const connection = new WebSocket(
       `${config.wsBackendUrl}/?token=${state.userData.token}`,
     );
-  }
+    setWs(connection);
+    return () => {
+      connection.close();
+    };
+  }, [state.userData.token]);
 
-  return <WsContext.Provider value={ws.current}>{children}</WsContext.Provider>;
+  return ws && <WsContext.Provider value={ws}>{children}</WsContext.Provider>;
 };
 
 export default WsConnection;
