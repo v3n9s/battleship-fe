@@ -1,5 +1,5 @@
 import { Room } from '../types';
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 import { useWs } from '../hooks/ws';
 import Button from './styled/Button';
 import styled from 'styled-components';
@@ -53,27 +53,27 @@ const RoomsItem: FC<{ room: Room }> = ({ room }) => {
 
   const { send } = useWs();
 
-  const openPasswordModal = useCallback(() => {
+  const openPasswordModal = () => {
     dispatch({ type: 'OpenPasswordModal', payload: { roomId: room.id } });
-  }, [dispatch, room.id]);
+  };
 
-  const openPositionsModal = useCallback(() => {
+  const openPositionsModal = () => {
     dispatch({ type: 'OpenPositionsModal', payload: { roomId: room.id } });
-  }, [dispatch, room.id]);
+  };
 
-  const join = useCallback(() => {
+  const join = () => {
     send({
       type: 'JoinRoom',
       payload: { roomId: room.id, password: '' },
     });
-  }, [send, room.id]);
+  };
 
-  const leave = useCallback(() => {
+  const leave = () => {
     send({
       type: 'LeaveRoom',
       payload: { roomId: room.id },
     });
-  }, [send, room.id]);
+  };
 
   return (
     <StyledRoomsItem>

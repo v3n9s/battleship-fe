@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { useStore } from '../hooks/store';
 import { useWs } from '../hooks/ws';
@@ -32,11 +32,11 @@ const PositionsModal: FC = () => {
     }
   }, [dispatch, positions, state.positionsModal.roomId]);
 
-  const closeModal = useCallback(() => {
+  const closeModal = () => {
     dispatch({ type: 'ClosePositionsModal' });
-  }, [dispatch]);
+  };
 
-  const random = useCallback(() => {
+  const random = () => {
     if (state.positionsModal.roomId) {
       dispatch({
         type: 'SetRandomPositions',
@@ -45,37 +45,34 @@ const PositionsModal: FC = () => {
         },
       });
     }
-  }, [state.positionsModal.roomId, dispatch]);
+  };
 
-  const reset = useCallback(() => {
+  const reset = () => {
     if (state.positionsModal.roomId) {
       dispatch({
         type: 'ResetPositions',
         payload: { roomId: state.positionsModal.roomId },
       });
     }
-  }, [state.positionsModal.roomId, dispatch]);
+  };
 
-  const onCheck = useCallback(
-    ([rowInd, colInd]: [number, number]) => {
-      if (state.positionsModal.roomId && positions) {
-        dispatch({
-          type: 'SetPositions',
-          payload: {
-            roomId: state.positionsModal.roomId,
-            field: positions.map((row, prevRowInd) =>
-              prevRowInd === rowInd
-                ? row.map((v, cellInd) => (cellInd === colInd ? !v : v))
-                : row,
-            ),
-          },
-        });
-      }
-    },
-    [state.positionsModal.roomId, positions, dispatch],
-  );
+  const onCheck = ([rowInd, colInd]: [number, number]) => {
+    if (state.positionsModal.roomId && positions) {
+      dispatch({
+        type: 'SetPositions',
+        payload: {
+          roomId: state.positionsModal.roomId,
+          field: positions.map((row, prevRowInd) =>
+            prevRowInd === rowInd
+              ? row.map((v, cellInd) => (cellInd === colInd ? !v : v))
+              : row,
+          ),
+        },
+      });
+    }
+  };
 
-  const submit = useCallback(() => {
+  const submit = () => {
     const { roomId } = state.positionsModal;
     if (roomId) {
       const positions = state.positions[roomId];
@@ -83,7 +80,7 @@ const PositionsModal: FC = () => {
         send({ type: 'SetPositions', payload: { roomId, positions } });
       }
     }
-  }, [send, state.positionsModal, state.positions]);
+  };
 
   return positions ? (
     <Modal onClose={closeModal} maxWidth={800} isOpen={true}>

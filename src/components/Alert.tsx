@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { AnimationState, useAnimation } from '../hooks/animation';
 import { useStore } from '../hooks/store';
@@ -52,15 +52,15 @@ const Alert: FC<{ alert: { id: string; text: string; isShowed: boolean } }> = ({
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const onExit = useCallback(() => {
+  const onExit = () => {
     dispatch({ type: 'RemoveAlert', payload: { id: alert.id } });
-  }, [dispatch, alert.id]);
+  };
 
   const { state, exit } = useAnimation(ref, onExit);
 
-  const hide = useCallback(() => {
+  const hide = () => {
     dispatch({ type: 'HideAlert', payload: { id: alert.id } });
-  }, [dispatch, alert.id]);
+  };
 
   useEffect(() => {
     if (!alert.isShowed) {

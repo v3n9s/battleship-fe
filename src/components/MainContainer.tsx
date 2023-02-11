@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { UserData } from '../types';
 import { getUserData, saveUserData } from '../services/user-data';
@@ -13,10 +13,10 @@ import Alerts from './Alerts';
 const MainContainer = () => {
   const [userData, setUserData] = useState(getUserData());
 
-  const onUserData = useCallback((data: UserData) => {
+  const onUserData = (data: UserData) => {
     setUserData(data);
     saveUserData(data);
-  }, []);
+  };
 
   const theme = useTheme();
 

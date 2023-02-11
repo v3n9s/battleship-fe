@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useStore } from '../hooks/store';
 import { MessageHandler, useWs } from '../hooks/ws';
 import { deepSatisfies } from '../utils';
@@ -12,41 +12,38 @@ const PasswordModal: FC = () => {
 
   const { send, addMessageHandler, removeMessageHandler } = useWs();
 
-  const onModalClose = useCallback(() => {
+  const onModalClose = () => {
     dispatch({ type: 'ClosePasswordModal' });
-  }, [dispatch]);
+  };
 
-  const join = useCallback(
-    (roomId: string) =>
-      (({ password }, setValues) => {
-        send({
-          type: 'JoinRoom',
-          payload: { roomId, password },
-        });
-        const handler: MessageHandler = (message) => {
-          removeMessageHandler(handler);
-          if (
-            deepSatisfies(message, {
-              type: 'RoomJoin',
-              payload: {
-                roomId,
-                user: {
-                  id: state.userData.id,
-                },
+  const join = (roomId: string) =>
+    (({ password }, setValues) => {
+      send({
+        type: 'JoinRoom',
+        payload: { roomId, password },
+      });
+      const handler: MessageHandler = (message) => {
+        removeMessageHandler(handler);
+        if (
+          deepSatisfies(message, {
+            type: 'RoomJoin',
+            payload: {
+              roomId,
+              user: {
+                id: state.userData.id,
               },
-            })
-          ) {
-            setIsOpen(false);
-          } else {
-            setValues({
-              password: '',
-            });
-          }
-        };
-        addMessageHandler(handler);
-      }) satisfies OnSubmitCallback<{ password: string }>,
-    [send, addMessageHandler, removeMessageHandler, state.userData.id],
-  );
+            },
+          })
+        ) {
+          setIsOpen(false);
+        } else {
+          setValues({
+            password: '',
+          });
+        }
+      };
+      addMessageHandler(handler);
+    }) satisfies OnSubmitCallback<{ password: string }>;
 
   useEffect(() => {
     if (state.passwordModal.roomId) {

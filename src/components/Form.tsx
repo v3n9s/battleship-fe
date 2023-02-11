@@ -4,7 +4,6 @@ import {
   Fragment,
   HTMLInputTypeAttribute,
   ReactElement,
-  useCallback,
   useState,
 } from 'react';
 import styled from 'styled-components';
@@ -58,20 +57,17 @@ const Form = <
     ) as U,
   );
 
-  const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormValues((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
-  }, []);
+  };
 
-  const onSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      onSubmitCallback(formValues, setFormValues);
-    },
-    [onSubmitCallback, formValues],
-  );
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSubmitCallback(formValues, setFormValues);
+  };
 
   return (
     <StyledForm onSubmit={onSubmit}>

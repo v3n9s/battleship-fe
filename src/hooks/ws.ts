@@ -4,7 +4,7 @@ import {
   ServerMessage,
   ServerMessages,
 } from '../types';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { WsContext } from '../contexts/ws';
 import { deepSatisfies } from '../utils';
 
@@ -30,15 +30,15 @@ export const useWs = () => {
 
   const messageHandlers = useRef<MessageHandler[]>([]);
 
-  const addMessageHandler = useCallback((handler: MessageHandler) => {
+  const addMessageHandler = (handler: MessageHandler) => {
     messageHandlers.current.push(handler);
-  }, []);
+  };
 
-  const removeMessageHandler = useCallback((handler: MessageHandler) => {
+  const removeMessageHandler = (handler: MessageHandler) => {
     messageHandlers.current = messageHandlers.current.filter(
       (v) => v !== handler,
     );
-  }, []);
+  };
 
   useEffect(() => {
     const openHandler = () => {
@@ -64,37 +64,31 @@ export const useWs = () => {
     };
   }, [ws, isConnecting]);
 
-  const send = useCallback(
-    (message: ClientMessage) => {
-      ws.send(JSON.stringify(message));
-    },
-    [ws],
-  );
+  const send = (message: ClientMessage) => {
+    ws.send(JSON.stringify(message));
+  };
 
-  const awaitMessage = useCallback(
-    (m: Message, time = 5000) => {
-      return new Promise<void>((res) => {
-        const delay = 250;
-        const start = Date.now();
-        const onResolve = () => {
-          setTimeout(() => {
-            res();
-            removeMessageHandler(awaiter);
-          }, Math.max(0, start + delay - Date.now()));
-        };
-        const awaiter: MessageHandler = (message) => {
-          if (deepSatisfies(message, m)) {
-            onResolve();
-          }
-        };
-        addMessageHandler(awaiter);
+  const awaitMessage = (m: Message, time = 5000) => {
+    return new Promise<void>((res) => {
+      const delay = 250;
+      const start = Date.now();
+      const onResolve = () => {
         setTimeout(() => {
+          res();
+          removeMessageHandler(awaiter);
+        }, Math.max(0, start + delay - Date.now()));
+      };
+      const awaiter: MessageHandler = (message) => {
+        if (deepSatisfies(message, m)) {
           onResolve();
-        }, time);
-      });
-    },
-    [addMessageHandler, removeMessageHandler],
-  );
+        }
+      };
+      addMessageHandler(awaiter);
+      setTimeout(() => {
+        onResolve();
+      }, time);
+    });
+  };
 
   return {
     send,

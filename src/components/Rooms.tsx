@@ -1,4 +1,4 @@
-import { FC, useCallback, useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { CreateRoomMessage } from '../types';
 import Form, { OnSubmitCallback } from './Form';
 import RoomsItem from './RoomsItem';
@@ -31,25 +31,25 @@ const Rooms: FC = () => {
 
   const { send, awaitMessage } = useWs();
 
-  const createRoom: OnSubmitCallback<CreateRoomMessage> = useCallback(
-    async (payload, setValues) => {
-      send({ type: 'CreateRoom', payload });
-      setIsLoading(true);
-      await Promise.any([
-        awaitMessage({
-          type: 'RoomCreate',
-          payload: { player1: { id: state.userData.id } },
-        }),
-        awaitMessage({
-          type: 'Error',
-          payload: { text: 'Message data is wrong' },
-        }),
-      ]);
-      setIsLoading(false);
-      setValues({ name: '', password: '' });
-    },
-    [send, awaitMessage, state.userData.id],
-  );
+  const createRoom: OnSubmitCallback<CreateRoomMessage> = async (
+    payload,
+    setValues,
+  ) => {
+    send({ type: 'CreateRoom', payload });
+    setIsLoading(true);
+    await Promise.any([
+      awaitMessage({
+        type: 'RoomCreate',
+        payload: { player1: { id: state.userData.id } },
+      }),
+      awaitMessage({
+        type: 'Error',
+        payload: { text: 'Message data is wrong' },
+      }),
+    ]);
+    setIsLoading(false);
+    setValues({ name: '', password: '' });
+  };
 
   const createRoomFormFields = useRef({
     name: {

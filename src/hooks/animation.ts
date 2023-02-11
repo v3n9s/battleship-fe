@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 
 export type AnimationState = 'entering' | 'entered' | 'exiting';
 
@@ -37,9 +37,9 @@ export const useAnimation = (
     }
   }, [state, elemRef, onExit, ongoingAnimationsCount]);
 
-  const exit = useCallback(() => {
+  const exit = () => {
     setState('exiting');
-  }, []);
+  };
 
   return { state, exit };
 };
