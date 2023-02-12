@@ -1,4 +1,4 @@
-import { Field, Room, ServerMessage, UserData } from '../types';
+import { Field, ObjectToUnion, Room, ServerMessage, UserData } from '../types';
 
 const getEmptyField = () => {
   return new Array(10)
@@ -117,83 +117,43 @@ export type RootReducerType = {
   alerts: Alert[];
 };
 
-type OpenPasswordModalAction = {
-  type: 'OpenPasswordModal';
-  payload: {
+type Actions = {
+  OpenPasswordModal: {
     roomId: string;
   };
-};
-
-type ClosePasswordModalAction = {
-  type: 'ClosePasswordModal';
-};
-
-type OpenPositionsModalAction = {
-  type: 'OpenPositionsModal';
-  payload: {
+  ClosePasswordModal: undefined;
+  OpenPositionsModal: {
     roomId: string;
   };
-};
-
-type ClosePositionsModalAction = {
-  type: 'ClosePositionsModal';
-};
-
-type ResetPositionsAction = {
-  type: 'ResetPositions';
-  payload: {
+  ClosePositionsModal: undefined;
+  ResetPositions: {
     roomId: string;
   };
-};
-
-type SetPositionsAction = {
-  type: 'SetPositions';
-  payload: {
+  SetPositions: {
     roomId: string;
     field: Field;
   };
-};
-
-type SetRandomPositionsAction = {
-  type: 'SetRandomPositions';
-  payload: {
+  SetRandomPositions: {
     roomId: string;
   };
-};
-
-type ShowAlertAction = {
-  type: 'ShowAlert';
-  payload: {
+  ShowAlert: {
     id?: string;
     text: string;
   };
-};
-
-type HideAlertAction = {
-  type: 'HideAlert';
-  payload: {
+  HideAlert: {
     id: string;
   };
-};
-
-type RemoveAlertAction = {
-  type: 'RemoveAlert';
-  payload: {
+  RemoveAlert: {
     id: string;
   };
 };
 
 export type RootReducerActionType =
-  | OpenPasswordModalAction
-  | ClosePasswordModalAction
-  | OpenPositionsModalAction
-  | ClosePositionsModalAction
-  | ResetPositionsAction
-  | SetPositionsAction
-  | SetRandomPositionsAction
-  | ShowAlertAction
-  | HideAlertAction
-  | RemoveAlertAction
+  | ObjectToUnion<{
+      [K in keyof Actions]: Actions[K] extends undefined
+        ? { type: K }
+        : { type: K; payload: Actions[K] };
+    }>
   | ServerMessage;
 
 export const rootReducer = (
