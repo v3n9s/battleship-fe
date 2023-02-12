@@ -1,12 +1,12 @@
-import { UserData } from '../types';
+import { UserData } from '../../types';
 import { FC, ReactElement, useCallback, useReducer } from 'react';
 import {
   RootReducerContext,
   RootReducerContextDispatch,
-} from '../contexts/root-reducer';
-import { rootReducer } from '../reducers/root';
+} from '../../contexts/root-reducer';
+import { rootReducer } from '../../reducers/root';
 
-const Store: FC<{ children?: ReactElement; userData: UserData }> = ({
+const StoreProvider: FC<{ children?: ReactElement; userData: UserData }> = ({
   children,
   userData,
 }) => {
@@ -42,4 +42,4 @@ const Store: FC<{ children?: ReactElement; userData: UserData }> = ({
   );
 };
 
-export default Store;
+export default StoreProvider;

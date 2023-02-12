@@ -1,9 +1,9 @@
 import { FC, ReactElement, useEffect, useState } from 'react';
-import config from '../config';
-import { WsContext } from '../contexts/ws';
-import { useStore } from '../hooks/store';
+import config from '../../config';
+import { WsContext } from '../../contexts/ws';
+import { useStore } from '../../hooks/store';
 
-const WsConnection: FC<{ children: ReactElement }> = ({ children }) => {
+const WsProvider: FC<{ children: ReactElement }> = ({ children }) => {
   const { state } = useStore();
 
   const [ws, setWs] = useState<null | WebSocket>(null);
@@ -21,4 +21,4 @@ const WsConnection: FC<{ children: ReactElement }> = ({ children }) => {
   return ws && <WsContext.Provider value={ws}>{children}</WsContext.Provider>;
 };
 
-export default WsConnection;
+export default WsProvider;

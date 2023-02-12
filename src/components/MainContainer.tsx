@@ -3,11 +3,11 @@ import { useTheme } from 'styled-components';
 import { UserData } from '../types';
 import { getUserData, saveUserData } from '../services/user-data';
 import Rooms from './Rooms';
-import Store from './Store';
+import StoreProvider from './providers/StoreProvider';
 import Container from './styled/Container';
 import Welcome from './Welcome';
 import DispatchServerMessages from './DispatchServerMessages';
-import WsConnection from './WsConnection';
+import WsProvider from './providers/WsProvider';
 import Alerts from './Alerts';
 
 const MainContainer = () => {
@@ -23,15 +23,15 @@ const MainContainer = () => {
   return (
     <Container maxWidth={theme.mainContainerMaxWidth}>
       {userData ? (
-        <Store userData={userData}>
-          <WsConnection>
+        <StoreProvider userData={userData}>
+          <WsProvider>
             <>
               <DispatchServerMessages />
               <Rooms />
               <Alerts />
             </>
-          </WsConnection>
-        </Store>
+          </WsProvider>
+        </StoreProvider>
       ) : (
         <Welcome setUserData={onUserData} />
       )}
