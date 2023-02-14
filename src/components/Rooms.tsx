@@ -1,4 +1,4 @@
-import { FC, useContext, useRef, useState } from 'react';
+import { FC, useRef } from 'react';
 import { CreateRoomMessage } from '../types';
 import Form, { OnSubmitCallback } from './Form';
 import RoomsItem from './RoomsItem';
@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import PasswordModal from './PasswordModal';
 import { useStore } from '../hooks/store';
 import PositionsModal from './PositionsModal';
-import { UserDataContext } from '../contexts/user-data';
 
 const StyledRooms = styled.div`
   padding: 10px;
@@ -28,29 +27,13 @@ const StatusText = styled.div`
 const Rooms: FC = () => {
   const { state } = useStore();
 
-  const { userData } = useContext(UserDataContext);
+  const { send } = useWs();
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { send, awaitMessage } = useWs();
-
-  const createRoom: OnSubmitCallback<CreateRoomMessage> = async (
+  const createRoom: OnSubmitCallback<CreateRoomMessage> = (
     payload,
     setValues,
   ) => {
     send({ type: 'CreateRoom', payload });
-    setIsLoading(true);
-    await Promise.any([
-      awaitMessage({
-        type: 'RoomCreate',
-        payload: { player1: { id: userData.id } },
-      }),
-      awaitMessage({
-        type: 'Error',
-        payload: { text: 'Message data is wrong' },
-      }),
-    ]);
-    setIsLoading(false);
     setValues({ name: '', password: '' });
   };
 
@@ -75,7 +58,6 @@ const Rooms: FC = () => {
         fields={createRoomFormFields}
         onSubmit={createRoom}
         submitButtonText="Create room"
-        isLoading={isLoading}
       />
       <RoomsList>
         {!state.serverResponded ? (
