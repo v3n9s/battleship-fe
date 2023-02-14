@@ -1,6 +1,6 @@
 import { UserData } from '../types';
 
-export const saveUserData = (data: UserData) => {
+export const saveUserData = (data: UserData | null) => {
   localStorage.setItem('user-data', JSON.stringify(data));
 };
 

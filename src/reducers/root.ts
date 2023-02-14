@@ -1,4 +1,4 @@
-import { Field, ObjectToUnion, Room, ServerMessage, UserData } from '../types';
+import { Field, ObjectToUnion, Room, ServerMessage } from '../types';
 
 const getEmptyField = () => {
   return new Array(10)
@@ -102,7 +102,6 @@ export type Alert = {
 };
 
 export type RootReducerType = {
-  userData: UserData;
   rooms: Room[];
   serverResponded: boolean;
   passwordModal: {

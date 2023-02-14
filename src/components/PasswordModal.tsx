@@ -1,4 +1,5 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
+import { UserDataContext } from '../contexts/user-data';
 import { useStore } from '../hooks/store';
 import { MessageHandler, useWs } from '../hooks/ws';
 import { deepSatisfies } from '../utils';
@@ -7,6 +8,8 @@ import Modal from './Modal';
 
 const PasswordModal: FC = () => {
   const { dispatch, state } = useStore();
+
+  const { userData } = useContext(UserDataContext);
 
   const [isOpen, setIsOpen] = useState(true);
 
@@ -30,7 +33,7 @@ const PasswordModal: FC = () => {
             payload: {
               roomId,
               user: {
-                id: state.userData.id,
+                id: userData.id,
               },
             },
           })

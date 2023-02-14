@@ -17,7 +17,9 @@ type DeepPartial<T extends object> = {
 type Message = ObjectToUnion<{
   [K in keyof ServerMessages]: {
     type: K;
-    payload?: DeepPartial<ServerMessages[K]>;
+    payload?: ServerMessages[K] extends object
+      ? DeepPartial<ServerMessages[K]>
+      : undefined;
   };
 }>;
 

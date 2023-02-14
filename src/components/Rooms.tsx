@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useContext, useRef, useState } from 'react';
 import { CreateRoomMessage } from '../types';
 import Form, { OnSubmitCallback } from './Form';
 import RoomsItem from './RoomsItem';
@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import PasswordModal from './PasswordModal';
 import { useStore } from '../hooks/store';
 import PositionsModal from './PositionsModal';
+import { UserDataContext } from '../contexts/user-data';
 
 const StyledRooms = styled.div`
   padding: 10px;
@@ -27,6 +28,8 @@ const StatusText = styled.div`
 const Rooms: FC = () => {
   const { state } = useStore();
 
+  const { userData } = useContext(UserDataContext);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { send, awaitMessage } = useWs();
@@ -40,7 +43,7 @@ const Rooms: FC = () => {
     await Promise.any([
       awaitMessage({
         type: 'RoomCreate',
-        payload: { player1: { id: state.userData.id } },
+        payload: { player1: { id: userData.id } },
       }),
       awaitMessage({
         type: 'Error',

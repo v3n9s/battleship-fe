@@ -1,7 +1,10 @@
 import { FC } from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { theme } from '../theme';
+import DispatchServerMessages from './DispatchServerMessages';
 import MainContainer from './MainContainer';
+import StoreProvider from './providers/StoreProvider';
+import WsProvider from './providers/WsProvider';
 
 const ResetStyles = createGlobalStyle`
   * {
@@ -33,7 +36,14 @@ const App: FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <ResetStyles />
-      <MainContainer />
+      <WsProvider>
+        <StoreProvider>
+          <>
+            <DispatchServerMessages />
+            <MainContainer />
+          </>
+        </StoreProvider>
+      </WsProvider>
     </ThemeProvider>
   );
 };

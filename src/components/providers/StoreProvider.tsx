@@ -1,4 +1,3 @@
-import { UserData } from '../../types';
 import { FC, ReactElement, useCallback, useReducer } from 'react';
 import {
   RootReducerContext,
@@ -6,12 +5,8 @@ import {
 } from '../../contexts/root-reducer';
 import { rootReducer } from '../../reducers/root';
 
-const StoreProvider: FC<{ children?: ReactElement; userData: UserData }> = ({
-  children,
-  userData,
-}) => {
+const StoreProvider: FC<{ children?: ReactElement }> = ({ children }) => {
   const [state, dispatch] = useReducer(rootReducer, {
-    userData,
     rooms: [],
     serverResponded: false,
     passwordModal: {

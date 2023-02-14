@@ -1,9 +1,10 @@
 import { Room } from '../types';
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import { useWs } from '../hooks/ws';
 import Button from './styled/Button';
 import styled from 'styled-components';
 import { useStore } from '../hooks/store';
+import { UserDataContext } from '../contexts/user-data';
 
 const StyledRoomsItem = styled.div`
   display: flex;
@@ -49,7 +50,9 @@ const ButtonsList = styled.div`
 `;
 
 const RoomsItem: FC<{ room: Room }> = ({ room }) => {
-  const { dispatch, state } = useStore();
+  const { dispatch } = useStore();
+
+  const { userData } = useContext(UserDataContext);
 
   const { send } = useWs();
 
@@ -88,14 +91,13 @@ const RoomsItem: FC<{ room: Room }> = ({ room }) => {
         </StyledPlayers>
       </StyledInfo>
       <ButtonsList>
-        {(state.userData.id === room.player1.id ||
-          state.userData.id === room.player2?.id) && (
+        {(userData.id === room.player1.id ||
+          userData.id === room.player2?.id) && (
           <Button onClick={openPositionsModal} borderless>
             position
           </Button>
         )}
-        {state.userData.id === room.player1.id ||
-        state.userData.id === room.player2?.id ? (
+        {userData.id === room.player1.id || userData.id === room.player2?.id ? (
           <Button onClick={leave} borderless>
             leave
           </Button>
