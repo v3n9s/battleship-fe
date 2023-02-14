@@ -5,6 +5,7 @@ import DispatchServerMessages from './DispatchServerMessages';
 import MainContainer from './MainContainer';
 import StoreProvider from './providers/StoreProvider';
 import WsProvider from './providers/WsProvider';
+import WsLoader from './WsLoader';
 
 const ResetStyles = createGlobalStyle`
   * {
@@ -40,7 +41,9 @@ const App: FC = () => {
         <StoreProvider>
           <>
             <DispatchServerMessages />
-            <MainContainer />
+            <WsLoader>
+              <MainContainer />
+            </WsLoader>
           </>
         </StoreProvider>
       </WsProvider>
