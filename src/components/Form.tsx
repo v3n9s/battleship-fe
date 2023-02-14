@@ -1,9 +1,11 @@
 import {
   ChangeEvent,
+  Dispatch,
   FormEvent,
   Fragment,
   HTMLInputTypeAttribute,
   ReactElement,
+  SetStateAction,
   useState,
 } from 'react';
 import styled from 'styled-components';
@@ -34,7 +36,7 @@ type Field = {
 
 export type OnSubmitCallback<T extends { [k: string]: string }> = (
   fields: T,
-  setValues: (values: T) => void,
+  setValues: Dispatch<SetStateAction<T>>,
 ) => void;
 
 const Form = <
