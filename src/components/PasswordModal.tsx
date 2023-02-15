@@ -27,7 +27,6 @@ const PasswordModal: FC = () => {
         payload: { roomId, password },
       });
       const handler: MessageHandler = (message) => {
-        removeMessageHandler(handler);
         if (
           deepSatisfies(message, {
             type: 'RoomJoin',
@@ -39,8 +38,15 @@ const PasswordModal: FC = () => {
             },
           })
         ) {
+          removeMessageHandler(handler);
           setIsOpen(false);
-        } else {
+        } else if (
+          deepSatisfies(message, {
+            type: 'Error',
+            payload: { text: 'Wrong room password' },
+          })
+        ) {
+          removeMessageHandler(handler);
           setValues({
             password: '',
           });
