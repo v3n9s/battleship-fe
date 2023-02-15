@@ -17,6 +17,7 @@ const PasswordModal: FC = () => {
 
   const onModalClose = () => {
     dispatch({ type: 'ClosePasswordModal' });
+    setIsOpen(true);
   };
 
   const join = (roomId: string) =>
