@@ -14,28 +14,37 @@ const Routes: FC = () => {
     saveUserData(data);
   };
 
-  const { send, addMessageHandler, removeMessageHandler } = useWs();
+  const {
+    send,
+    addMessageHandler,
+    removeMessageHandler,
+    loggedIn,
+    setLoggedIn,
+  } = useWs();
 
   useEffect(() => {
     const handler: MessageHandler = (message) => {
       if (message.type === 'TokenCreate') {
         onUserData(message.payload);
+      } else if (message.type === 'TokenSet') {
+        onUserData(message.payload);
+        setLoggedIn(!!message.payload);
       }
     };
     addMessageHandler(handler);
     return () => {
       removeMessageHandler(handler);
     };
-  }, [addMessageHandler, removeMessageHandler]);
+  }, [addMessageHandler, removeMessageHandler, setLoggedIn]);
 
   useEffect(() => {
-    if (userData) {
+    if (!loggedIn && userData) {
       send({
         type: 'SubmitToken',
         payload: { token: userData.token },
       });
     }
-  }, [send, userData]);
+  }, [loggedIn, send, userData]);
 
   return userData ? (
     <UserDataContext.Provider value={{ userData }}>

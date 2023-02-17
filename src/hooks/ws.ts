@@ -5,7 +5,7 @@ import { WsContext } from '../contexts/ws';
 export type MessageHandler = (m: ServerMessage) => void;
 
 export const useWs = () => {
-  const ws = useContext(WsContext);
+  const { ws, loggedIn, setLoggedIn } = useContext(WsContext);
 
   const [isConnecting, setIsConnecting] = useState(
     ws.readyState === ws.CONNECTING,
@@ -51,5 +51,12 @@ export const useWs = () => {
     ws.send(JSON.stringify(message));
   };
 
-  return { send, addMessageHandler, removeMessageHandler, isConnecting };
+  return {
+    send,
+    addMessageHandler,
+    removeMessageHandler,
+    isConnecting,
+    loggedIn,
+    setLoggedIn,
+  };
 };

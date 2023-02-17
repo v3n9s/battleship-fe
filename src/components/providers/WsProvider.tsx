@@ -5,6 +5,8 @@ import { WsContext } from '../../contexts/ws';
 const WsProvider: FC<{ children: ReactElement }> = ({ children }) => {
   const [ws, setWs] = useState<null | WebSocket>(null);
 
+  const [loggedIn, setLoggedIn] = useState(false);
+
   useEffect(() => {
     const connection = new WebSocket(config.wsBackendUrl);
     setWs(connection);
@@ -13,7 +15,13 @@ const WsProvider: FC<{ children: ReactElement }> = ({ children }) => {
     };
   }, []);
 
-  return ws && <WsContext.Provider value={ws}>{children}</WsContext.Provider>;
+  return (
+    ws && (
+      <WsContext.Provider value={{ ws, loggedIn, setLoggedIn }}>
+        {children}
+      </WsContext.Provider>
+    )
+  );
 };
 
 export default WsProvider;
