@@ -60,8 +60,8 @@ const RoomsItem: FC<{ room: Room }> = ({ room }) => {
     dispatch({ type: 'OpenPasswordModal', payload: { roomId: room.id } });
   };
 
-  const openPositionsModal = () => {
-    dispatch({ type: 'OpenPositionsModal', payload: { roomId: room.id } });
+  const toRoomPage = () => {
+    dispatch({ type: 'SetRoomPageId', payload: { roomId: room.id } });
   };
 
   const join = () => {
@@ -93,8 +93,8 @@ const RoomsItem: FC<{ room: Room }> = ({ room }) => {
       <ButtonsList>
         {(userData.id === room.player1.id ||
           userData.id === room.player2?.id) && (
-          <Button onClick={openPositionsModal} borderless>
-            position
+          <Button onClick={toRoomPage} borderless>
+            to game
           </Button>
         )}
         {userData.id === room.player1.id || userData.id === room.player2?.id ? (

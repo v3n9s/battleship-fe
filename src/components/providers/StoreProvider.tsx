@@ -13,10 +13,8 @@ const StoreProvider: FC<{ children?: ReactElement }> = ({ children }) => {
       roomId: null,
     },
     positions: {},
-    positionsModal: {
-      roomId: null,
-    },
     alerts: [],
+    roomPageId: null,
   });
 
   const thunkDispatch = useCallback<RootReducerContextDispatch>(

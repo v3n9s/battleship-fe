@@ -5,6 +5,8 @@ import Rooms from './Rooms';
 import Welcome from './Welcome';
 import { MessageHandler, useWs } from '../hooks/ws';
 import { UserDataContext } from '../contexts/user-data';
+import { useStore } from '../hooks/store';
+import RoomPage from './RoomPage';
 
 const Routes: FC = () => {
   const [userData, setUserData] = useState(getUserData());
@@ -13,6 +15,8 @@ const Routes: FC = () => {
     setUserData(data);
     saveUserData(data);
   };
+
+  const { state } = useStore();
 
   const {
     send,
@@ -48,7 +52,7 @@ const Routes: FC = () => {
 
   return userData ? (
     <UserDataContext.Provider value={{ userData }}>
-      <Rooms />
+      {state.roomPageId ? <RoomPage roomId={state.roomPageId} /> : <Rooms />}
     </UserDataContext.Provider>
   ) : (
     <Welcome />

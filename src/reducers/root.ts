@@ -13,13 +13,11 @@ export type RootReducerType = {
   passwordModal: {
     roomId: string | null;
   };
-  positionsModal: {
-    roomId: string | null;
-  };
   positions: {
     [roomId: string]: Field;
   };
   alerts: Alert[];
+  roomPageId: string | null;
 };
 
 type Actions = {
@@ -27,10 +25,6 @@ type Actions = {
     roomId: string;
   };
   ClosePasswordModal: undefined;
-  OpenPositionsModal: {
-    roomId: string;
-  };
-  ClosePositionsModal: undefined;
   ResetPositions: {
     roomId: string;
   };
@@ -50,6 +44,9 @@ type Actions = {
   };
   RemoveAlert: {
     id: string;
+  };
+  SetRoomPageId: {
+    roomId: string | null;
   };
 };
 
@@ -129,16 +126,6 @@ export const rootReducer = (
       ...state,
       passwordModal: { roomId: null },
     };
-  } else if (action.type === 'OpenPositionsModal') {
-    return {
-      ...state,
-      positionsModal: { roomId: action.payload.roomId },
-    };
-  } else if (action.type === 'ClosePositionsModal') {
-    return {
-      ...state,
-      positionsModal: { roomId: null },
-    };
   } else if (action.type === 'ResetPositions') {
     return {
       ...state,
@@ -187,6 +174,8 @@ export const rootReducer = (
       ...state,
       alerts: state.alerts.filter((alert) => alert.id !== action.payload.id),
     };
+  } else if (action.type === 'SetRoomPageId') {
+    return { ...state, roomPageId: action.payload.roomId };
   }
   return state;
 };
