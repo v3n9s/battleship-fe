@@ -50,18 +50,11 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
     });
   };
 
-  const onCheck = ([rowInd, colInd]: [number, number]) => {
+  const onCheck = (cellInd: [number, number]) => {
     if (positions) {
       dispatch({
-        type: 'SetPositions',
-        payload: {
-          roomId,
-          field: positions.map((row, prevRowInd) =>
-            prevRowInd === rowInd
-              ? row.map((v, cellInd) => (cellInd === colInd ? !v : v))
-              : row,
-          ),
-        },
+        type: 'SetCell',
+        payload: { roomId, cellInd },
       });
     }
   };

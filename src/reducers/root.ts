@@ -32,6 +32,10 @@ type Actions = {
     roomId: string;
     field: Field;
   };
+  SetCell: {
+    roomId: string;
+    cellInd: [number, number];
+  };
   SetRandomPositions: {
     roomId: string;
   };
@@ -140,6 +144,22 @@ export const rootReducer = (
       positions: {
         ...state.positions,
         [action.payload.roomId]: action.payload.field,
+      },
+    };
+  } else if (action.type === 'SetCell') {
+    return {
+      ...state,
+      positions: {
+        ...state.positions,
+        [action.payload.roomId]: (
+          state.positions[action.payload.roomId] || getEmptyField()
+        ).map((row, prevRowInd) =>
+          prevRowInd === action.payload.cellInd[0]
+            ? row.map((v, cellInd) =>
+                cellInd === action.payload.cellInd[1] ? !v : v,
+              )
+            : row,
+        ),
       },
     };
   } else if (action.type === 'SetRandomPositions') {
