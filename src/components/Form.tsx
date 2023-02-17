@@ -82,12 +82,12 @@ const Form = <
               type={type}
               value={formValues[name]}
               onChange={onChange}
-              isLoading={isLoading}
+              disabled={isLoading}
             />
           </Fragment>
         ))}
       </List>
-      <Button type="submit" isLoading={isLoading}>
+      <Button type="submit" disabled={isLoading}>
         {submitButtonText}
       </Button>
     </StyledForm>

@@ -1,20 +1,6 @@
 import styled, { css } from 'styled-components';
 
-const Button = styled.button.attrs<
-  {
-    isLoading?: boolean | undefined;
-    borderless?: boolean | undefined;
-  },
-  {
-    disabled: boolean | undefined;
-    isLoading: boolean;
-    borderless: boolean;
-  }
->((props) => ({
-  disabled: props.disabled ?? props.isLoading,
-  isLoading: props.isLoading ?? false,
-  borderless: props.borderless ?? false,
-}))`
+const Button = styled.button<{ borderless?: boolean | undefined }>`
   display: block;
   padding: 5px;
   font-size: 20px;
@@ -25,16 +11,16 @@ const Button = styled.button.attrs<
       : css`
           border: 2px solid
             ${() =>
-              props.isLoading
+              props.disabled
                 ? props.theme.loadingColor
                 : props.theme.primaryColor};
         `}
   background-color: ${(props) =>
-    props.isLoading ? props.theme.loadingColor : props.theme.primaryColor};
+    props.disabled ? props.theme.loadingColor : props.theme.primaryColor};
   transition: background-color 0.15s linear, border 0.15s linear;
 
   ${(props) =>
-    props.isLoading
+    props.disabled
       ? ''
       : css`
           &:hover {
