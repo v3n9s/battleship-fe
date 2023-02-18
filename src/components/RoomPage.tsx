@@ -7,7 +7,7 @@ import Button from './styled/Button';
 import Container from './styled/Container';
 
 const StyledRoomPage = styled(Container)`
-  padding: 10px 10px 0px;
+  padding: 10px;
 `;
 
 const ButtonsRow = styled.div`
