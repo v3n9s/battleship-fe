@@ -1,20 +1,19 @@
 import { FC, ReactNode } from 'react';
-import styled from 'styled-components';
 import { useWs } from '../hooks/ws';
-
-const StyledText = styled.div`
-  margin: 0px auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  font-size: 24px;
-`;
+import CenteredContainer from './styled/CenteredContainer';
 
 const WsLoader: FC<{ children: ReactNode }> = ({ children }) => {
   const { isConnecting } = useWs();
 
-  return <>{isConnecting ? <StyledText>Loading...</StyledText> : children}</>;
+  return (
+    <>
+      {isConnecting ? (
+        <CenteredContainer>Loading...</CenteredContainer>
+      ) : (
+        children
+      )}
+    </>
+  );
 };
 
 export default WsLoader;
