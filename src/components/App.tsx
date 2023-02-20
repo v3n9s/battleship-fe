@@ -36,18 +36,18 @@ const ResetStyles = createGlobalStyle`
 
 const App: FC = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <ResetStyles />
-      <WsProvider>
-        <StoreProvider>
-          <DispatchServerMessages />
+    <WsProvider>
+      <StoreProvider>
+        <DispatchServerMessages />
+        <ThemeProvider theme={theme}>
+          <ResetStyles />
           <WsLoader>
             <Alerts />
             <Routes />
           </WsLoader>
-        </StoreProvider>
-      </WsProvider>
-    </ThemeProvider>
+        </ThemeProvider>
+      </StoreProvider>
+    </WsProvider>
   );
 };
 
