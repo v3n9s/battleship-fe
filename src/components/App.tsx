@@ -39,12 +39,10 @@ const App: FC = () => {
       <ResetStyles />
       <WsProvider>
         <StoreProvider>
-          <>
-            <DispatchServerMessages />
-            <WsLoader>
-              <MainContainer />
-            </WsLoader>
-          </>
+          <DispatchServerMessages />
+          <WsLoader>
+            <MainContainer />
+          </WsLoader>
         </StoreProvider>
       </WsProvider>
     </ThemeProvider>

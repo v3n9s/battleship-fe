@@ -1,8 +1,8 @@
-import { FC, ReactElement, useEffect, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import config from '../../config';
 import { WsContext } from '../../contexts/ws';
 
-const WsProvider: FC<{ children: ReactElement }> = ({ children }) => {
+const WsProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [ws, setWs] = useState<null | WebSocket>(null);
 
   const [loggedIn, setLoggedIn] = useState(false);

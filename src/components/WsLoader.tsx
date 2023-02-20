@@ -1,4 +1,4 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 import { useWs } from '../hooks/ws';
 
@@ -11,10 +11,10 @@ const StyledText = styled.div`
   font-size: 24px;
 `;
 
-const WsLoader: FC<{ children: ReactElement }> = ({ children }) => {
+const WsLoader: FC<{ children: ReactNode }> = ({ children }) => {
   const { isConnecting } = useWs();
 
-  return isConnecting ? <StyledText>Loading...</StyledText> : children;
+  return <>{isConnecting ? <StyledText>Loading...</StyledText> : children}</>;
 };
 
 export default WsLoader;

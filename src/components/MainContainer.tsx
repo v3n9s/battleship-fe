@@ -8,10 +8,8 @@ const MainContainer = () => {
 
   return (
     <Container maxWidth={theme.mainContainerMaxWidth}>
-      <>
-        <Alerts />
-        <Routes />
-      </>
+      <Alerts />
+      <Routes />
     </Container>
   );
 };

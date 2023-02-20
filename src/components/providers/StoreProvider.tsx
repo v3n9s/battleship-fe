@@ -1,11 +1,11 @@
-import { FC, ReactElement, useCallback, useReducer } from 'react';
+import { FC, ReactNode, useCallback, useReducer } from 'react';
 import {
   RootReducerContext,
   RootReducerContextDispatch,
 } from '../../contexts/root-reducer';
 import { rootReducer } from '../../reducers/root';
 
-const StoreProvider: FC<{ children?: ReactElement }> = ({ children }) => {
+const StoreProvider: FC<{ children?: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(rootReducer, {
     rooms: [],
     serverResponded: false,
