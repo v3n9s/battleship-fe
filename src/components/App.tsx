@@ -1,10 +1,11 @@
 import { FC } from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { theme } from '../theme';
+import Alerts from './Alerts';
 import DispatchServerMessages from './DispatchServerMessages';
-import MainContainer from './MainContainer';
 import StoreProvider from './providers/StoreProvider';
 import WsProvider from './providers/WsProvider';
+import Routes from './Routes';
 import WsLoader from './WsLoader';
 
 const ResetStyles = createGlobalStyle`
@@ -41,7 +42,8 @@ const App: FC = () => {
         <StoreProvider>
           <DispatchServerMessages />
           <WsLoader>
-            <MainContainer />
+            <Alerts />
+            <Routes />
           </WsLoader>
         </StoreProvider>
       </WsProvider>

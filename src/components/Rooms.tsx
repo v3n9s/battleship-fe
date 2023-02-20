@@ -3,11 +3,12 @@ import { CreateRoomMessage } from '../types';
 import Form, { OnSubmitCallback } from './Form';
 import RoomsItem from './RoomsItem';
 import { useWs } from '../hooks/ws';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import PasswordModal from './PasswordModal';
 import { useStore } from '../hooks/store';
+import Container from './styled/Container';
 
-const StyledRooms = styled.div`
+const StyledRooms = styled(Container)`
   padding: 10px;
 `;
 
@@ -27,6 +28,8 @@ const Rooms: FC = () => {
   const { state } = useStore();
 
   const { send } = useWs();
+
+  const theme = useTheme();
 
   const createRoom: OnSubmitCallback<CreateRoomMessage> = (
     payload,
@@ -50,7 +53,7 @@ const Rooms: FC = () => {
   }).current;
 
   return (
-    <StyledRooms>
+    <StyledRooms maxWidth={theme.mainContainerMaxWidth}>
       <PasswordModal />
       <Form
         fields={createRoomFormFields}
