@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import Form, { OnSubmitCallback } from './Form';
+import Form from './Form';
 import styled from 'styled-components';
 import { useWs } from '../hooks/ws';
 
@@ -13,12 +13,6 @@ const StyledWelcome = styled.div`
 const Welcome: FC = () => {
   const { send } = useWs();
 
-  const submitName: OnSubmitCallback<{ name: string }> = ({ name }) => {
-    if (name.length >= 1 && name.length <= 32) {
-      send({ type: 'GetToken', payload: { name } });
-    }
-  };
-
   return (
     <StyledWelcome>
       <Form
@@ -29,7 +23,11 @@ const Welcome: FC = () => {
             value: '',
           },
         }}
-        onSubmit={submitName}
+        onSubmit={({ name }) => {
+          if (name.length >= 1 && name.length <= 32) {
+            send({ type: 'GetToken', payload: { name } });
+          }
+        }}
         submitButtonText="Submit"
       />
     </StyledWelcome>
