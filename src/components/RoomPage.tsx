@@ -2,6 +2,8 @@ import { FC, useEffect } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { useStore } from '../hooks/store';
 import { useWs } from '../hooks/ws';
+import Link from './Link';
+import NotFound from './NotFound';
 import Positions from './Positions';
 import Button from './styled/Button';
 import Container from './styled/Container';
@@ -36,6 +38,10 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
     }
   }, [room, dispatch, positions, roomId]);
 
+  if (!room || !positions) {
+    return <NotFound />;
+  }
+
   const random = () => {
     dispatch({
       type: 'SetRandomPositions',
@@ -69,11 +75,7 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
     send({ type: 'ReadyToPlay', payload: { roomId } });
   };
 
-  const toRooms = () => {
-    dispatch({ type: 'SetRoomPageId', payload: { roomId: null } });
-  };
-
-  return room && positions ? (
+  return (
     <StyledRoomPage maxWidth={800}>
       <Positions
         positions={positions.map((row) =>
@@ -90,10 +92,10 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
         <Button onClick={ready}>ready</Button>
       </ButtonsRow>
       <ButtonsRow>
-        <Button onClick={toRooms}>to rooms</Button>
+        <Link to="rooms">to rooms</Link>
       </ButtonsRow>
     </StyledRoomPage>
-  ) : null;
+  );
 };
 
 export default RoomPage;

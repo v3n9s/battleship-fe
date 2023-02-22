@@ -1,12 +1,14 @@
 import { UserData } from '../types';
-import { FC, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { getUserData, saveUserData } from '../services/user-data';
 import Rooms from './Rooms';
 import Welcome from './Welcome';
 import { MessageHandler, useWs } from '../hooks/ws';
 import { UserDataContext } from '../contexts/user-data';
-import { useStore } from '../hooks/store';
 import RoomPage from './RoomPage';
+import NotFound from './NotFound';
+import { useRouter } from '../hooks/router';
+import { RouterContext } from '../contexts/router';
 
 const Routes: FC = () => {
   const [userData, setUserData] = useState(getUserData());
@@ -16,8 +18,6 @@ const Routes: FC = () => {
     saveUserData(data);
   };
 
-  const { state } = useStore();
-
   const {
     send,
     addMessageHandler,
@@ -25,6 +25,8 @@ const Routes: FC = () => {
     loggedIn,
     setLoggedIn,
   } = useWs();
+
+  const { setRoute } = useContext(RouterContext);
 
   useEffect(() => {
     const handler: MessageHandler = (message) => {
@@ -50,13 +52,58 @@ const Routes: FC = () => {
     }
   }, [loggedIn, send, userData]);
 
-  return userData ? (
-    <UserDataContext.Provider value={{ userData }}>
-      {state.roomPageId ? <RoomPage roomId={state.roomPageId} /> : <Rooms />}
-    </UserDataContext.Provider>
-  ) : (
-    <Welcome />
-  );
+  return useRouter([
+    {
+      path: '',
+      getNode: () => {
+        setRoute(userData ? 'rooms' : 'welcome');
+        return null;
+      },
+    },
+    {
+      path: 'welcome',
+      getNode: () => {
+        if (userData) {
+          setRoute('rooms');
+        }
+        return <Welcome />;
+      },
+    },
+    {
+      path: 'rooms',
+      getNode: () => {
+        if (!userData) {
+          setRoute('welcome');
+          return null;
+        }
+        return (
+          <UserDataContext.Provider value={{ userData }}>
+            <Rooms />
+          </UserDataContext.Provider>
+        );
+      },
+      children: [
+        {
+          path: '*',
+          getNode: (roomId) => {
+            if (!userData) {
+              setRoute('welcome');
+              return null;
+            }
+            return (
+              <UserDataContext.Provider value={{ userData }}>
+                <RoomPage roomId={roomId} />
+              </UserDataContext.Provider>
+            );
+          },
+        },
+      ],
+    },
+    {
+      path: '*',
+      getNode: () => <NotFound />,
+    },
+  ]);
 };
 
 export default Routes;

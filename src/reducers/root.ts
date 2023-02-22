@@ -17,7 +17,6 @@ export type RootReducerType = {
     [roomId: string]: Field;
   };
   alerts: Alert[];
-  roomPageId: string | null;
 };
 
 type Actions = {
@@ -48,9 +47,6 @@ type Actions = {
   };
   RemoveAlert: {
     id: string;
-  };
-  SetRoomPageId: {
-    roomId: string | null;
   };
 };
 
@@ -194,8 +190,6 @@ export const rootReducer = (
       ...state,
       alerts: state.alerts.filter((alert) => alert.id !== action.payload.id),
     };
-  } else if (action.type === 'SetRoomPageId') {
-    return { ...state, roomPageId: action.payload.roomId };
   }
   return state;
 };

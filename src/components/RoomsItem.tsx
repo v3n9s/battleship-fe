@@ -5,6 +5,7 @@ import Button from './styled/Button';
 import styled from 'styled-components';
 import { useStore } from '../hooks/store';
 import { UserDataContext } from '../contexts/user-data';
+import Link from './Link';
 
 const StyledRoomsItem = styled.div`
   display: flex;
@@ -60,10 +61,6 @@ const RoomsItem: FC<{ room: Room }> = ({ room }) => {
     dispatch({ type: 'OpenPasswordModal', payload: { roomId: room.id } });
   };
 
-  const toRoomPage = () => {
-    dispatch({ type: 'SetRoomPageId', payload: { roomId: room.id } });
-  };
-
   const join = () => {
     send({
       type: 'JoinRoom',
@@ -93,9 +90,9 @@ const RoomsItem: FC<{ room: Room }> = ({ room }) => {
       <ButtonsList>
         {(userData.id === room.player1.id ||
           userData.id === room.player2?.id) && (
-          <Button onClick={toRoomPage} borderless>
+          <Link borderless to={`rooms/${room.id}`}>
             to game
-          </Button>
+          </Link>
         )}
         {userData.id === room.player1.id || userData.id === room.player2?.id ? (
           <Button onClick={leave} borderless>

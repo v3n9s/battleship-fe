@@ -3,6 +3,7 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { theme } from '../theme';
 import Alerts from './Alerts';
 import DispatchServerMessages from './DispatchServerMessages';
+import RouterProvider from './providers/RouterProvider';
 import StoreProvider from './providers/StoreProvider';
 import WsProvider from './providers/WsProvider';
 import Routes from './Routes';
@@ -43,7 +44,9 @@ const App: FC = () => {
           <ResetStyles />
           <WsLoader>
             <Alerts />
-            <Routes />
+            <RouterProvider>
+              <Routes />
+            </RouterProvider>
           </WsLoader>
         </ThemeProvider>
       </StoreProvider>

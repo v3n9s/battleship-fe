@@ -14,7 +14,6 @@ const StoreProvider: FC<{ children?: ReactNode }> = ({ children }) => {
     },
     positions: {},
     alerts: [],
-    roomPageId: null,
   });
 
   const thunkDispatch = useCallback<RootReducerContextDispatch>(
