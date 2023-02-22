@@ -8,7 +8,7 @@ const WsLoader: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <>
       {isConnecting ? (
-        <CenteredContainer>Loading...</CenteredContainer>
+        <CenteredContainer>Connecting...</CenteredContainer>
       ) : (
         children
       )}
