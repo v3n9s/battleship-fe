@@ -2,9 +2,9 @@ import { FC, useEffect } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { useStore } from '../hooks/store';
 import { useWs } from '../hooks/ws';
-import Link from './Link';
-import NotFound from './NotFound';
-import Positions from './Positions';
+import Link from './common/Link';
+import NotFound from './common/NotFound';
+import Positions from './common/Positions';
 import Button from './styled/Button';
 import Container from './styled/Container';
 

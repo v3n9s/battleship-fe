@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 import Link from './Link';
-import CenteredContainer from './styled/CenteredContainer';
+import CenteredContainer from '../styled/CenteredContainer';
 
 const StyledNotFound = styled(CenteredContainer)`
   flex-direction: column;

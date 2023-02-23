@@ -3,8 +3,8 @@ import { UserDataContext } from '../contexts/user-data';
 import { useStore } from '../hooks/store';
 import { MessageHandler, useWs } from '../hooks/ws';
 import { deepSatisfies } from '../utils';
-import Form, { OnSubmitCallback } from './Form';
-import Modal from './Modal';
+import Form, { OnSubmitCallback } from './common/Form';
+import Modal from './common/Modal';
 
 const PasswordModal: FC = () => {
   const { dispatch, state } = useStore();

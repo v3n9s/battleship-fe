@@ -6,7 +6,7 @@ import Welcome from './Welcome';
 import { MessageHandler, useWs } from '../hooks/ws';
 import { UserDataContext } from '../contexts/user-data';
 import RoomPage from './RoomPage';
-import NotFound from './NotFound';
+import NotFound from './common/NotFound';
 import { useRouter } from '../hooks/router';
 import { RouterContext } from '../contexts/router';
 

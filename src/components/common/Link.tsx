@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
-import Button from './styled/Button';
+import Button from '../styled/Button';
 
 const StyledLink = styled(Button)`
   display: flex;

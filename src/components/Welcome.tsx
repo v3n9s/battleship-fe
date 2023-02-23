@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import Form from './Form';
+import Form from './common/Form';
 import styled from 'styled-components';
 import { useWs } from '../hooks/ws';
 

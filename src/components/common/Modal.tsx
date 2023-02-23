@@ -1,6 +1,6 @@
 import { FC, ReactNode, useEffect, useRef } from 'react';
 import styled, { css, keyframes } from 'styled-components';
-import { AnimationState, useAnimation } from '../hooks/animation';
+import { AnimationState, useAnimation } from '../../hooks/animation';
 
 const StyledWrapper = styled.div`
   position: fixed;

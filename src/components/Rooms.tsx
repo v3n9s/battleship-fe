@@ -1,6 +1,6 @@
 import { FC, useRef } from 'react';
 import { CreateRoomMessage } from '../types';
-import Form, { OnSubmitCallback } from './Form';
+import Form, { OnSubmitCallback } from './common/Form';
 import RoomsItem from './RoomsItem';
 import { useWs } from '../hooks/ws';
 import styled, { useTheme } from 'styled-components';

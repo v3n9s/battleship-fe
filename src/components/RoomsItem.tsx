@@ -5,7 +5,7 @@ import Button from './styled/Button';
 import styled from 'styled-components';
 import { useStore } from '../hooks/store';
 import { UserDataContext } from '../contexts/user-data';
-import Link from './Link';
+import Link from './common/Link';
 
 const StyledRoomsItem = styled.div`
   display: flex;

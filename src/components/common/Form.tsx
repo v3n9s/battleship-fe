@@ -9,8 +9,8 @@ import {
   useState,
 } from 'react';
 import styled from 'styled-components';
-import Button from './styled/Button';
-import Input from './styled/Input';
+import Button from '../styled/Button';
+import Input from '../styled/Input';
 
 const StyledForm = styled.form`
   display: flex;
