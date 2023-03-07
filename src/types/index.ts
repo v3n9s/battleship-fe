@@ -1,1 +1,1 @@
-export * from 'battleship-be/types';
+export * from 'battleship-be/src/types';

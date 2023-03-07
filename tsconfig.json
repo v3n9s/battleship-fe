@@ -4,10 +4,12 @@
     "noUncheckedIndexedAccess": true,
     "strict": true,
 
-    "module": "esnext",
-    "moduleResolution": "node16",
+    "module": "es2022",
+    "moduleResolution": "node",
+    "rootDir": ".",
 
     "newLine": "lf",
+    "outDir": "./dist",
     "sourceMap": true,
 
     "allowSyntheticDefaultImports": true,
@@ -15,8 +17,10 @@
     "forceConsistentCasingInFileNames": true,
 
     "jsx": "react-jsx",
-    "lib": ["esnext", "dom"],
-    "target": "esnext"
+    "lib": ["es2022", "dom"],
+    "target": "es2022",
+
+    "skipLibCheck": true
   },
   "ts-node": {
     "compilerOptions": {
