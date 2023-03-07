@@ -1,4 +1,4 @@
-import { UserData } from 'battleship-be/types';
+import { UserData } from '../types';
 import { createContext } from 'react';
 
 export const UserDataContext = createContext(
