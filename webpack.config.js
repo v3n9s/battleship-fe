@@ -1,10 +1,14 @@
+// @ts-check
 import 'webpack-dev-server';
-import { Configuration } from 'webpack';
 import DotenvWebpackPlugin from 'dotenv-webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-export default (env: { [k: string]: string | boolean }): Configuration => {
+/**
+ * @param {{ [k: string]: string | boolean }} env
+ * @returns {import('webpack').Configuration}
+ */
+export default (env) => {
   const isDev = env.mode === 'dev';
   const port =
     env.port && !Number.isNaN(+env.port) && +env.port > 0 ? +env.port : 3000;

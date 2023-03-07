@@ -1,10 +1,11 @@
 {
   "name": "battleship-fe",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "webpack serve --env mode=dev",
     "build": "webpack",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@types/react": "^18.0.26",

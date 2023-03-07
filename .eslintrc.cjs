@@ -10,7 +10,7 @@ module.exports = {
   ignorePatterns: ['.eslintrc.cjs', 'webpack.config.cjs'],
   overrides: [
     {
-      files: ['*.ts', '*.tsx'],
+      files: ['*.ts', '*.tsx', './webpack.config.js'],
       extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',

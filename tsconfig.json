@@ -1,4 +1,7 @@
 {
+  "include": ["./src"],
+  "files": ["./webpack.config.js"],
+  "exclude": [],
   "compilerOptions": {
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
@@ -13,7 +16,6 @@
     "sourceMap": true,
 
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
 
     "jsx": "react-jsx",
@@ -21,10 +23,5 @@
     "target": "es2022",
 
     "skipLibCheck": true
-  },
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    }
   }
 }
