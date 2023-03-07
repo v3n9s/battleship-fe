@@ -7,7 +7,7 @@ module.exports = {
     node: true,
     browser: true,
   },
-  ignorePatterns: ['.eslintrc.cjs', 'webpack.config.cjs'],
+  ignorePatterns: ['/dist'],
   overrides: [
     {
       files: ['*.ts', '*.tsx', './webpack.config.js'],
