@@ -12,11 +12,11 @@ const Button = styled.button<{ borderless?: boolean | undefined }>`
           border: 2px solid
             ${() =>
               props.disabled
-                ? props.theme.loadingColor
+                ? props.theme.disabledColor
                 : props.theme.primaryColor};
         `}
   background-color: ${(props) =>
-    props.disabled ? props.theme.loadingColor : props.theme.primaryColor};
+    props.disabled ? props.theme.disabledColor : props.theme.primaryColor};
   transition: background-color 0.15s linear, border 0.15s linear;
 
   ${(props) =>

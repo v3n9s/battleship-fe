@@ -6,8 +6,8 @@ declare module 'styled-components' {
     primaryColor: string;
     secondaryColor: string;
     backgroundColor: string;
-    loadingColor: string;
-    inputLoadingColor: string;
+    disabledColor: string;
+    inputDisabledColor: string;
     overlayColor: string;
 
     mainContainerMaxWidth: number;
@@ -18,8 +18,8 @@ export const theme: DefaultTheme = {
   primaryColor: '#a00',
   secondaryColor: '#fff',
   backgroundColor: '#000',
-  loadingColor: '#555',
-  inputLoadingColor: '#aaa',
+  disabledColor: '#555',
+  inputDisabledColor: '#aaa',
   overlayColor: '#000000cc',
   mainContainerMaxWidth: 1024,
 };
