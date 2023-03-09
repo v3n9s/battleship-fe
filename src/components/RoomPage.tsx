@@ -71,10 +71,6 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
     }
   };
 
-  const ready = () => {
-    send({ type: 'ReadyToPlay', payload: { roomId } });
-  };
-
   return (
     <StyledRoomPage maxWidth={800}>
       <Positions
@@ -89,7 +85,6 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
         <Button onClick={random}>random</Button>
         <Button onClick={reset}>reset</Button>
         <Button onClick={submit}>submit</Button>
-        <Button onClick={ready}>ready</Button>
       </ButtonsRow>
       <ButtonsRow>
         <Link to="rooms">to rooms</Link>
