@@ -1,5 +1,6 @@
-import { FC, useEffect } from 'react';
+import { FC, useContext, useEffect } from 'react';
 import styled, { useTheme } from 'styled-components';
+import { UserDataContext } from '../contexts/user-data';
 import { useStore } from '../hooks/store';
 import { useWs } from '../hooks/ws';
 import Link from './common/Link';
@@ -13,13 +14,23 @@ const StyledRoomPage = styled(Container)`
 `;
 
 const ButtonsRow = styled.div`
-  margin-top: 10px;
+  margin: 10px 0px;
   display: flex;
   justify-content: space-around;
+  gap: 10px;
+`;
+
+const ExtendedButton = styled(Button)`
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  text-align: center;
 `;
 
 const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
   const { dispatch, state } = useStore();
+
+  const { userData } = useContext(UserDataContext);
 
   const { send } = useWs();
 
@@ -41,6 +52,16 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
   if (!room || !positions) {
     return <NotFound />;
   }
+
+  const isRoomOwner = userData.id === room.player1.id;
+
+  const isPlayerReady = isRoomOwner
+    ? room.player1.hasPositions
+    : !!room.player2?.hasPositions;
+
+  const isOpponentReady = !isRoomOwner
+    ? room.player1.hasPositions
+    : !!room.player2?.hasPositions;
 
   const random = () => {
     dispatch({
@@ -71,23 +92,43 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
     }
   };
 
+  const start = () => {
+    send({ type: 'StartGame', payload: { roomId: room.id } });
+  };
+
   return (
     <StyledRoomPage maxWidth={800}>
+      <Link to="rooms">to rooms</Link>
+      <ButtonsRow>
+        <ExtendedButton onClick={random} disabled={isPlayerReady}>
+          random
+        </ExtendedButton>
+        <ExtendedButton onClick={reset} disabled={isPlayerReady}>
+          reset
+        </ExtendedButton>
+      </ButtonsRow>
       <Positions
         positions={positions.map((row) =>
           row.map((cell) =>
-            cell ? theme.primaryColor : theme.backgroundColor,
+            cell
+              ? isPlayerReady
+                ? theme.disabledColor
+                : theme.primaryColor
+              : theme.backgroundColor,
           ),
         )}
-        onCheck={onCheck}
+        onCheck={isPlayerReady ? undefined : onCheck}
       />
       <ButtonsRow>
-        <Button onClick={random}>random</Button>
-        <Button onClick={reset}>reset</Button>
-        <Button onClick={submit}>submit</Button>
-      </ButtonsRow>
-      <ButtonsRow>
-        <Link to="rooms">to rooms</Link>
+        {isRoomOwner && isPlayerReady ? (
+          <ExtendedButton onClick={start} disabled={!isOpponentReady}>
+            start
+          </ExtendedButton>
+        ) : (
+          <ExtendedButton onClick={submit} disabled={isPlayerReady}>
+            submit
+          </ExtendedButton>
+        )}
       </ButtonsRow>
     </StyledRoomPage>
   );
