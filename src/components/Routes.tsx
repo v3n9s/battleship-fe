@@ -1,8 +1,8 @@
 import { UserData } from '../types';
 import { FC, useContext, useEffect, useState } from 'react';
 import { getUserData, saveUserData } from '../services/user-data';
-import Rooms from './Rooms';
-import Welcome from './Welcome';
+import RoomsPage from './RoomsPage';
+import WelcomePage from './WelcomePage';
 import { MessageHandler, useWs } from '../hooks/ws';
 import { UserDataContext } from '../contexts/user-data';
 import RoomPage from './RoomPage';
@@ -66,7 +66,7 @@ const Routes: FC = () => {
         if (userData) {
           setRoute('rooms');
         }
-        return <Welcome />;
+        return <WelcomePage />;
       },
     },
     {
@@ -78,7 +78,7 @@ const Routes: FC = () => {
         }
         return (
           <UserDataContext.Provider value={{ userData }}>
-            <Rooms />
+            <RoomsPage />
           </UserDataContext.Provider>
         );
       },
