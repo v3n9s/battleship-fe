@@ -78,18 +78,14 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
   };
 
   const onCheck = (cellInd: [number, number]) => {
-    if (positions) {
-      dispatch({
-        type: 'SetCell',
-        payload: { roomId, cellInd },
-      });
-    }
+    dispatch({
+      type: 'SetCell',
+      payload: { roomId, cellInd },
+    });
   };
 
   const submit = () => {
-    if (positions) {
-      send({ type: 'SetPositions', payload: { roomId, positions } });
-    }
+    send({ type: 'SetPositions', payload: { roomId, positions } });
   };
 
   const start = () => {
