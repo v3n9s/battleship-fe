@@ -27,10 +27,6 @@ type Actions = {
   ResetPositions: {
     roomId: string;
   };
-  SetPositions: {
-    roomId: string;
-    field: Field;
-  };
   SetCell: {
     roomId: string;
     cellInd: [number, number];
@@ -132,14 +128,6 @@ export const rootReducer = (
       positions: {
         ...state.positions,
         [action.payload.roomId]: getEmptyField(),
-      },
-    };
-  } else if (action.type === 'SetPositions') {
-    return {
-      ...state,
-      positions: {
-        ...state.positions,
-        [action.payload.roomId]: action.payload.field,
       },
     };
   } else if (action.type === 'SetCell') {
