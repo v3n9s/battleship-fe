@@ -31,6 +31,7 @@ type Actions = {
   };
   SetCell: {
     roomId: string;
+    field: 'positions' | 'attacks';
     cellInd: [number, number];
   };
   SetRandomPositions: {
@@ -140,7 +141,9 @@ export const rootReducer = (
         r.id === action.payload.roomId
           ? {
               ...r,
-              positions: (r.positions || getEmptyField()).map((row, rowInd) =>
+              [action.payload.field]: (
+                r[action.payload.field] || getEmptyField()
+              ).map((row, rowInd) =>
                 rowInd === action.payload.cellInd[0]
                   ? row.map((v, cellInd) =>
                       cellInd === action.payload.cellInd[1] ? !v : v,

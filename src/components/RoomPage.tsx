@@ -80,7 +80,7 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
   const onCheck = (cellInd: [number, number]) => {
     dispatch({
       type: 'SetCell',
-      payload: { roomId, cellInd },
+      payload: { roomId, field: 'positions', cellInd },
     });
   };
 
