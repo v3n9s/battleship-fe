@@ -1,5 +1,5 @@
 import { getEmptyField, getRandomField } from '../services/field';
-import { Field, ObjectToUnion, Room, ServerMessage } from '../types';
+import { Field, ObjectToUnion, Room as RoomDto, ServerMessage } from '../types';
 
 export type Alert = {
   id: string;
@@ -7,14 +7,16 @@ export type Alert = {
   isShowed: boolean;
 };
 
+export type Room = RoomDto & {
+  positions?: Field | undefined;
+  attacks?: Field | undefined;
+};
+
 export type RootReducerType = {
   rooms: Room[];
   serverResponded: boolean;
   passwordModal: {
     roomId: string | null;
-  };
-  positions: {
-    [roomId: string]: Field;
   };
   alerts: Alert[];
 };
@@ -61,7 +63,12 @@ export const rootReducer = (
   if (action.type === 'ExistingRooms') {
     return { ...state, rooms: action.payload, serverResponded: true };
   } else if (action.type === 'ExistingPositions') {
-    return { ...state, positions: action.payload };
+    return {
+      ...state,
+      rooms: state.rooms.map((r) =>
+        r.id in action.payload ? { ...r, positions: action.payload[r.id] } : r,
+      ),
+    };
   } else if (action.type === 'RoomCreate') {
     return {
       ...state,
@@ -93,11 +100,6 @@ export const rootReducer = (
     return {
       ...state,
       rooms: state.rooms.filter((r) => r.id !== action.payload.roomId),
-      positions: Object.fromEntries(
-        Object.entries(state.positions).filter(
-          ([roomId]) => roomId !== action.payload.roomId,
-        ),
-      ),
     };
   } else if (action.type === 'RoomPositionsSet') {
     return {
@@ -125,34 +127,38 @@ export const rootReducer = (
   } else if (action.type === 'ResetPositions') {
     return {
       ...state,
-      positions: {
-        ...state.positions,
-        [action.payload.roomId]: getEmptyField(),
-      },
+      rooms: state.rooms.map((r) =>
+        r.id === action.payload.roomId
+          ? { ...r, positions: getEmptyField() }
+          : r,
+      ),
     };
   } else if (action.type === 'SetCell') {
     return {
       ...state,
-      positions: {
-        ...state.positions,
-        [action.payload.roomId]: (
-          state.positions[action.payload.roomId] || getEmptyField()
-        ).map((row, prevRowInd) =>
-          prevRowInd === action.payload.cellInd[0]
-            ? row.map((v, cellInd) =>
-                cellInd === action.payload.cellInd[1] ? !v : v,
-              )
-            : row,
-        ),
-      },
+      rooms: state.rooms.map((r) =>
+        r.id === action.payload.roomId
+          ? {
+              ...r,
+              positions: (r.positions || getEmptyField()).map((row, rowInd) =>
+                rowInd === action.payload.cellInd[0]
+                  ? row.map((v, cellInd) =>
+                      cellInd === action.payload.cellInd[1] ? !v : v,
+                    )
+                  : row,
+              ),
+            }
+          : r,
+      ),
     };
   } else if (action.type === 'SetRandomPositions') {
     return {
       ...state,
-      positions: {
-        ...state.positions,
-        [action.payload.roomId]: getRandomField(),
-      },
+      rooms: state.rooms.map((r) =>
+        r.id === action.payload.roomId
+          ? { ...r, positions: getRandomField() }
+          : r,
+      ),
     };
   } else if (action.type === 'ShowAlert') {
     return {

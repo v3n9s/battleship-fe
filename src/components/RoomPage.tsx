@@ -38,7 +38,7 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
 
   const room = state.rooms.find((room) => room.id === roomId);
 
-  const positions = state.positions[roomId];
+  const positions = room?.positions;
 
   useEffect(() => {
     if (room && !positions) {

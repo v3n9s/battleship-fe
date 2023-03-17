@@ -12,7 +12,6 @@ const StoreProvider: FC<{ children?: ReactNode }> = ({ children }) => {
     passwordModal: {
       roomId: null,
     },
-    positions: {},
     alerts: [],
   });
 
