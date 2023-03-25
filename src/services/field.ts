@@ -1,9 +1,9 @@
-import { Field } from '../types';
+import { MatrixOf, PositionsCell } from '../types';
 
 export const getEmptyField = () => {
-  return new Array(10)
-    .fill(new Array(10).fill(false))
-    .map((v) => [...(v as boolean[])]);
+  return new Array<'empty'[]>(10)
+    .fill(new Array<'empty'>(10).fill('empty'))
+    .map((v) => [...v]);
 };
 
 const getCellsAroundCell = ([colInd, rowInd]: [number, number]): [
@@ -43,9 +43,10 @@ const getCellsAroundCells = (cells: [number, number][]): [number, number][] => {
     }, [] as [number, number][]);
 };
 
-const isFree = (field: Field, cells: [number, number][]) => {
+const isFree = (field: MatrixOf<PositionsCell>, cells: [number, number][]) => {
   return [...cells, ...getCellsAroundCells(cells)].every(
-    ([rowInd, colInd]) => !field[rowInd]?.[colInd],
+    ([rowInd, colInd]) =>
+      !field[rowInd]?.[colInd] || field[rowInd]?.[colInd] === 'empty',
   );
 };
 
@@ -67,7 +68,11 @@ const getRandomShip = (size: number) => {
     );
 };
 
-const setRandomShips = (field: Field, size: number, amount: number) => {
+const setRandomShips = (
+  field: MatrixOf<PositionsCell>,
+  size: number,
+  amount: number,
+) => {
   if (amount === 0) {
     return;
   }
@@ -80,7 +85,7 @@ const setRandomShips = (field: Field, size: number, amount: number) => {
   shipCells.forEach(([rowInd, y]) => {
     const row = field[rowInd];
     if (row) {
-      row[y] = true;
+      row[y] = 'ship';
     }
   });
   setRandomShips(field, size, amount - 1);

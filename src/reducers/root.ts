@@ -1,5 +1,12 @@
 import { getEmptyField, getRandomField } from '../services/field';
-import { Field, ObjectToUnion, Room as RoomDto, ServerMessage } from '../types';
+import {
+  AttacksCell,
+  MatrixOf,
+  ObjectToUnion,
+  PositionsCell,
+  Room as RoomDto,
+  ServerMessage,
+} from '../types';
 
 export type Alert = {
   id: string;
@@ -8,8 +15,8 @@ export type Alert = {
 };
 
 export type Room = RoomDto & {
-  positions?: Field | undefined;
-  attacks?: Field | undefined;
+  positions?: MatrixOf<PositionsCell> | undefined;
+  attacks?: MatrixOf<AttacksCell> | undefined;
 };
 
 export type RootReducerType = {
@@ -31,9 +38,11 @@ type Actions = {
   };
   SetCell: {
     roomId: string;
-    field: 'positions' | 'attacks';
     cellInd: [number, number];
-  };
+  } & (
+    | { field: 'positions'; value: PositionsCell }
+    | { field: 'attacks'; value: AttacksCell }
+  );
   SetRandomPositions: {
     roomId: string;
   };
@@ -146,7 +155,9 @@ export const rootReducer = (
               ).map((row, rowInd) =>
                 rowInd === action.payload.cellInd[0]
                   ? row.map((v, cellInd) =>
-                      cellInd === action.payload.cellInd[1] ? !v : v,
+                      cellInd === action.payload.cellInd[1]
+                        ? action.payload.value
+                        : v,
                     )
                   : row,
               ),

@@ -80,7 +80,7 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
   const onCheck = (cellInd: [number, number]) => {
     dispatch({
       type: 'SetCell',
-      payload: { roomId, field: 'positions', cellInd },
+      payload: { roomId, field: 'positions', cellInd, value: 'ship' },
     });
   };
 
@@ -106,7 +106,7 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
       <Positions
         positions={positions.map((row) =>
           row.map((cell) =>
-            cell
+            cell === 'ship'
               ? isPlayerReady
                 ? theme.disabledColor
                 : theme.primaryColor
