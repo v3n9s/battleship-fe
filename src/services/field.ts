@@ -82,10 +82,10 @@ const setRandomShips = (
     shipCells = getRandomShip(size);
   } while (!isFree(field, shipCells));
 
-  shipCells.forEach(([rowInd, y]) => {
+  shipCells.forEach(([rowInd, colInd]) => {
     const row = field[rowInd];
     if (row) {
-      row[y] = 'ship';
+      row[colInd] = 'ship';
     }
   });
   setRandomShips(field, size, amount - 1);
