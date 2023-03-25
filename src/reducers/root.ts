@@ -1,3 +1,4 @@
+import { produce } from 'immer';
 import { getEmptyField, getRandomField } from '../services/field';
 import {
   AttacksCell,
@@ -66,138 +67,78 @@ export type RootReducerActionType =
     }>
   | ServerMessage;
 
-export const rootReducer = (
-  state: RootReducerType,
-  action: RootReducerActionType,
-): RootReducerType => {
-  if (action.type === 'ExistingRooms') {
-    return { ...state, rooms: action.payload, serverResponded: true };
-  } else if (action.type === 'ExistingPositions') {
-    return {
-      ...state,
-      rooms: state.rooms.map((r) =>
-        r.id in action.payload ? { ...r, positions: action.payload[r.id] } : r,
-      ),
-    };
-  } else if (action.type === 'RoomCreate') {
-    return {
-      ...state,
-      rooms: [...state.rooms, action.payload],
-    };
-  } else if (action.type === 'RoomJoin') {
-    return {
-      ...state,
-      rooms: state.rooms.map((r) =>
-        r.id === action.payload.roomId
-          ? {
-              ...r,
-              player2: {
-                ...action.payload.user,
-                hasPositions: false,
-              },
-            }
-          : r,
-      ),
-    };
-  } else if (action.type === 'RoomLeave') {
-    return {
-      ...state,
-      rooms: state.rooms.map((r) =>
-        r.id === action.payload.roomId ? { ...r, player2: undefined } : r,
-      ),
-    };
-  } else if (action.type === 'RoomDelete') {
-    return {
-      ...state,
-      rooms: state.rooms.filter((r) => r.id !== action.payload.roomId),
-    };
-  } else if (action.type === 'RoomPositionsSet') {
-    return {
-      ...state,
-      rooms: state.rooms.map((r) =>
-        r.id === action.payload.roomId
-          ? r.player1.id === action.payload.userId
-            ? { ...r, player1: { ...r.player1, hasPositions: true } }
-            : r.player2?.id === action.payload.userId
-            ? { ...r, player2: { ...r.player2, hasPositions: true } }
-            : r
-          : r,
-      ),
-    };
-  } else if (action.type === 'OpenPasswordModal') {
-    return {
-      ...state,
-      passwordModal: { roomId: action.payload.roomId },
-    };
-  } else if (action.type === 'ClosePasswordModal') {
-    return {
-      ...state,
-      passwordModal: { roomId: null },
-    };
-  } else if (action.type === 'ResetPositions') {
-    return {
-      ...state,
-      rooms: state.rooms.map((r) =>
-        r.id === action.payload.roomId
-          ? { ...r, positions: getEmptyField() }
-          : r,
-      ),
-    };
-  } else if (action.type === 'SetCell') {
-    return {
-      ...state,
-      rooms: state.rooms.map((r) =>
-        r.id === action.payload.roomId
-          ? {
-              ...r,
-              [action.payload.field]: (
-                r[action.payload.field] || getEmptyField()
-              ).map((row, rowInd) =>
-                rowInd === action.payload.cellInd[0]
-                  ? row.map((v, cellInd) =>
-                      cellInd === action.payload.cellInd[1]
-                        ? action.payload.value
-                        : v,
-                    )
-                  : row,
-              ),
-            }
-          : r,
-      ),
-    };
-  } else if (action.type === 'SetRandomPositions') {
-    return {
-      ...state,
-      rooms: state.rooms.map((r) =>
-        r.id === action.payload.roomId
-          ? { ...r, positions: getRandomField() }
-          : r,
-      ),
-    };
-  } else if (action.type === 'ShowAlert') {
-    return {
-      ...state,
-      alerts: [
-        ...state.alerts,
-        {
-          id: action.payload.id ?? crypto.randomUUID(),
-          text: action.payload.text,
-          isShowed: true,
-        },
-      ],
-    };
-  } else if (action.type === 'HideAlert') {
-    return {
-      ...state,
-      alerts: state.alerts.map((alert) =>
-        alert.id === action.payload.id ? { ...alert, isShowed: false } : alert,
-      ),
-    };
-  } else if (action.type === 'RemoveAlert') {
-    return {
-      ...state,
-      alerts: state.alerts.filter((alert) => alert.id !== action.payload.id),
-    };
-  }
-  return state;
-};
+export const rootReducer = produce(
+  (state: RootReducerType, action: RootReducerActionType) => {
+    if (action.type === 'ExistingRooms') {
+      state.rooms = action.payload;
+      state.serverResponded = true;
+    } else if (action.type === 'ExistingPositions') {
+      state.rooms.forEach((r) => {
+        if (r.id in action.payload) {
+          r.positions = action.payload[r.id];
+        }
+      });
+    } else if (action.type === 'RoomCreate') {
+      state.rooms.push(action.payload);
+    } else if (action.type === 'RoomJoin') {
+      const room = state.rooms.find((r) => r.id === action.payload.roomId);
+      if (room) {
+        room.player2 = {
+          ...action.payload.user,
+          hasPositions: false,
+        };
+      }
+    } else if (action.type === 'RoomLeave') {
+      const room = state.rooms.find((r) => r.id === action.payload.roomId);
+      if (room) {
+        room.player2 = undefined;
+      }
+    } else if (action.type === 'RoomDelete') {
+      state.rooms = state.rooms.filter((r) => r.id !== action.payload.roomId);
+    } else if (action.type === 'RoomPositionsSet') {
+      const room = state.rooms.find((r) => r.id === action.payload.roomId);
+      if (room?.player1.id === action.payload.userId) {
+        room.player1.hasPositions = true;
+      } else if (room?.player2?.id === action.payload.userId) {
+        room.player2.hasPositions = true;
+      }
+    } else if (action.type === 'OpenPasswordModal') {
+      state.passwordModal = { roomId: action.payload.roomId };
+    } else if (action.type === 'ClosePasswordModal') {
+      state.passwordModal = { roomId: null };
+    } else if (action.type === 'ResetPositions') {
+      const room = state.rooms.find((r) => r.id === action.payload.roomId);
+      if (room) {
+        room.positions = getEmptyField();
+      }
+    } else if (action.type === 'SetCell') {
+      const room = state.rooms.find((r) => r.id === action.payload.roomId);
+      if (room) {
+        const row = room[action.payload.field]?.[action.payload.cellInd[0]];
+        if (row) {
+          row[action.payload.cellInd[1]] = action.payload.value;
+        }
+      }
+    } else if (action.type === 'SetRandomPositions') {
+      const room = state.rooms.find((r) => r.id === action.payload.roomId);
+      if (room) {
+        room.positions = getRandomField();
+      }
+    } else if (action.type === 'ShowAlert') {
+      state.alerts.push({
+        id: action.payload.id ?? crypto.randomUUID(),
+        text: action.payload.text,
+        isShowed: true,
+      });
+    } else if (action.type === 'HideAlert') {
+      const alert = state.alerts.find((a) => a.id === action.payload.id);
+      if (alert) {
+        alert.isShowed = false;
+      }
+    } else if (action.type === 'RemoveAlert') {
+      state.alerts = state.alerts.filter(
+        (alert) => alert.id !== action.payload.id,
+      );
+    }
+  },
+);
