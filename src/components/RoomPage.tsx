@@ -10,11 +10,13 @@ import Button from './styled/Button';
 import Container from './styled/Container';
 
 const StyledRoomPage = styled(Container)`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   padding: 10px;
 `;
 
 const ButtonsRow = styled.div`
-  margin: 10px 0px;
   display: flex;
   justify-content: space-around;
   gap: 10px;

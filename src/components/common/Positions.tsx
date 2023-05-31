@@ -4,6 +4,7 @@ import styled from 'styled-components';
 const StyledPositions = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
   margin: 0px auto;
   aspect-ratio: 1;
   background-color: ${(props) => props.theme.primaryColor};
