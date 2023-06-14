@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-const StyledPositions = styled.div`
+const StyledPositions = styled.div<{ $disabled: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -9,6 +9,10 @@ const StyledPositions = styled.div`
   aspect-ratio: 1;
   background-color: ${(props) => props.theme.primaryColor};
   border: 1px solid ${(props) => props.theme.primaryColor};
+
+  &:hover {
+    cursor: ${(props) => (props.$disabled ? '' : 'pointer')};
+  }
 `;
 
 const StyledRow = styled.div`
@@ -17,27 +21,28 @@ const StyledRow = styled.div`
   height: 10%;
 `;
 
-const StyledCell = styled.div<{ color: string }>`
+const StyledCell = styled.div<{ $color: string }>`
   width: 10%;
   height: 100%;
-  background-color: ${(props) => props.color};
+  background-color: ${(props) => props.$color};
   border: 1px solid ${(props) => props.theme.primaryColor};
   transition: background-color 0.15s linear;
 `;
 
 const Positions: FC<{
   positions: string[][];
+  disabled?: boolean | undefined;
   onCheck?: ((ind: [number, number]) => void) | undefined;
-}> = ({ positions, onCheck }) => {
+}> = ({ positions, disabled = false, onCheck }) => {
   return (
-    <StyledPositions>
+    <StyledPositions $disabled={disabled}>
       {positions.map((row, rowInd) => (
         <StyledRow key={rowInd}>
           {row.map((color, cellInd) => (
             <StyledCell
               key={cellInd}
               onClick={onCheck && (() => onCheck([rowInd, cellInd]))}
-              color={color}
+              $color={color}
             />
           ))}
         </StyledRow>

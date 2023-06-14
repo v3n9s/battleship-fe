@@ -8,6 +8,8 @@ import NotFound from './common/NotFound';
 import Positions from './common/Positions';
 import Button from './styled/Button';
 import Container from './styled/Container';
+import GamePage from './GamePage';
+import { Game, Room } from '../types';
 
 const StyledRoomPage = styled(Container)`
   display: flex;
@@ -82,7 +84,13 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
   const onCheck = (cellInd: [number, number]) => {
     dispatch({
       type: 'SetCell',
-      payload: { roomId, field: 'positions', cellInd, value: 'ship' },
+      payload: {
+        roomId,
+        field: 'positions',
+        cellInd,
+        value:
+          positions[cellInd[0]]?.[cellInd[1]] === 'empty' ? 'ship' : 'empty',
+      },
     });
   };
 
@@ -94,7 +102,9 @@ const RoomPage: FC<{ roomId: string }> = ({ roomId }) => {
     send({ type: 'StartGame', payload: { roomId: room.id } });
   };
 
-  return (
+  return room.game ? (
+    <GamePage room={room as Room & { game: Game }} />
+  ) : (
     <StyledRoomPage maxWidth={800}>
       <Link to="rooms">to rooms</Link>
       <ButtonsRow>

@@ -66,7 +66,9 @@ const Rooms: FC = () => {
         ) : state.rooms.length === 0 ? (
           <StatusText>There is no rooms yet</StatusText>
         ) : (
-          state.rooms.map((room) => <RoomsItem key={room.id} room={room} />)
+          state.rooms
+            .filter((room) => !room.game)
+            .map((room) => <RoomsItem key={room.id} room={room} />)
         )}
       </RoomsList>
     </StyledRooms>

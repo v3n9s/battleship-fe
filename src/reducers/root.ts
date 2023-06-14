@@ -139,6 +139,70 @@ export const rootReducer = produce(
       state.alerts = state.alerts.filter(
         (alert) => alert.id !== action.payload.id,
       );
+    } else if (action.type === 'GameStart') {
+      const room = state.rooms.find((r) => r.id === action.payload.roomId);
+      if (room) {
+        room.game = action.payload.game;
+      }
+    } else if (action.type === 'GameHit') {
+      const room = state.rooms.find((r) => r.id === action.payload.roomId);
+      if (room && room.game) {
+        const positions =
+          room.game.player1.id === action.payload.userId
+            ? room.game.player1.attacks
+            : room.game.player2.id === action.payload.userId
+            ? room.game.player2.attacks
+            : undefined;
+        if (positions) {
+          const row = positions[action.payload.position[0]];
+          if (row) {
+            row[action.payload.position[1]] = 'hit';
+          }
+        }
+      }
+    } else if (action.type === 'GameMiss') {
+      const room = state.rooms.find((r) => r.id === action.payload.roomId);
+      if (room && room.game) {
+        const positions =
+          room.game.player1.id === action.payload.userId
+            ? room.game.player1.attacks
+            : room.game.player2.id === action.payload.userId
+            ? room.game.player2.attacks
+            : undefined;
+        if (positions) {
+          const row = positions[action.payload.position[0]];
+          if (row) {
+            row[action.payload.position[1]] = 'miss';
+            room.game.movingPlayerId =
+              action.payload.userId === room.game.player1.id
+                ? room.game.player2.id
+                : room.game.player1.id;
+          }
+        }
+      }
+    } else if (action.type === 'GameDestroy') {
+      const room = state.rooms.find((r) => r.id === action.payload.roomId);
+      if (room && room.game) {
+        const positions =
+          room.game.player1.id === action.payload.userId
+            ? room.game.player1.attacks
+            : room.game.player2.id === action.payload.userId
+            ? room.game.player2.attacks
+            : undefined;
+        if (positions) {
+          action.payload.cellsAroundShip.forEach((cellIndex) => {
+            const row = positions[cellIndex[0]];
+            if (row) {
+              row[cellIndex[1]] = 'miss';
+            }
+          });
+        }
+      }
+    } else if (action.type === 'GameEnd') {
+      const room = state.rooms.find((r) => r.id === action.payload.roomId);
+      if (room && room.game) {
+        room.game.winner = action.payload.winner;
+      }
     }
   },
 );

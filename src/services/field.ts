@@ -22,7 +22,9 @@ const getCellsAroundCell = ([colInd, rowInd]: [number, number]): [
   ];
 };
 
-const getCellsAroundCells = (cells: [number, number][]): [number, number][] => {
+export const getCellsAroundCells = (
+  cells: [number, number][],
+): [number, number][] => {
   return cells
     .map((cell) => getCellsAroundCell(cell))
     .flat()
