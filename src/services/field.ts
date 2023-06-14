@@ -1,51 +1,9 @@
-import { MatrixOf, PositionsCell } from '../types';
+import { getCellsAroundCells, getFieldOf } from 'battleship-be/src/ships-field';
+import { CellIndex, MatrixOf, PositionsCell } from '../types';
 
-export const getEmptyField = () => {
-  return new Array<'empty'[]>(10)
-    .fill(new Array<'empty'>(10).fill('empty'))
-    .map((v) => [...v]);
-};
+export * from 'battleship-be/src/ships-field';
 
-const getCellsAroundCell = ([colInd, rowInd]: [number, number]): [
-  number,
-  number,
-][] => {
-  return [
-    [colInd - 1, rowInd - 1],
-    [colInd - 1, rowInd],
-    [colInd - 1, rowInd + 1],
-    [colInd, rowInd - 1],
-    [colInd, rowInd + 1],
-    [colInd + 1, rowInd - 1],
-    [colInd + 1, rowInd],
-    [colInd + 1, rowInd + 1],
-  ];
-};
-
-export const getCellsAroundCells = (
-  cells: [number, number][],
-): [number, number][] => {
-  return cells
-    .map((cell) => getCellsAroundCell(cell))
-    .flat()
-    .reduce((acc, [rowInd, colInd]) => {
-      if (
-        !acc.some(
-          ([uniqueRowInd, uniqueColInd]) =>
-            uniqueRowInd === rowInd && uniqueColInd === colInd,
-        ) &&
-        !cells.some(
-          ([shipRowInd, shipColInd]) =>
-            shipRowInd === rowInd && shipColInd === colInd,
-        )
-      ) {
-        acc.push([rowInd, colInd]);
-      }
-      return acc;
-    }, [] as [number, number][]);
-};
-
-const isFree = (field: MatrixOf<PositionsCell>, cells: [number, number][]) => {
+const isFree = (field: MatrixOf<PositionsCell>, cells: CellIndex[]) => {
   return [...cells, ...getCellsAroundCells(cells)].every(
     ([rowInd, colInd]) =>
       !field[rowInd]?.[colInd] || field[rowInd]?.[colInd] === 'empty',
@@ -60,13 +18,12 @@ const getRandomShip = (size: number) => {
     [rowInd, colInd] = [colInd, rowInd];
   }
   return new Array(size)
-    .fill([rowInd, colInd])
+    .fill(undefined)
     .map(
-      ([rowInd, colInd]: [number, number], i) =>
-        (isHorizontal ? [rowInd + i, colInd] : [rowInd, colInd + i]) as [
-          number,
-          number,
-        ],
+      (_, i) =>
+        (isHorizontal
+          ? [rowInd + i, colInd]
+          : [rowInd, colInd + i]) as CellIndex,
     );
 };
 
@@ -75,7 +32,7 @@ const setRandomShips = (
   size: number,
   amount: number,
 ) => {
-  if (amount === 0) {
+  if (amount <= 0) {
     return;
   }
 
@@ -94,7 +51,7 @@ const setRandomShips = (
 };
 
 export const getRandomField = () => {
-  const field = getEmptyField();
+  const field = getFieldOf('empty');
   setRandomShips(field, 4, 1);
   setRandomShips(field, 3, 2);
   setRandomShips(field, 2, 3);

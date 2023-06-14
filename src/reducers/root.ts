@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { getEmptyField, getRandomField } from '../services/field';
+import { getFieldOf, getRandomField } from '../services/field';
 import {
   AttacksCell,
   MatrixOf,
@@ -109,7 +109,7 @@ export const rootReducer = produce(
     } else if (action.type === 'ResetPositions') {
       const room = state.rooms.find((r) => r.id === action.payload.roomId);
       if (room) {
-        room.positions = getEmptyField();
+        room.positions = getFieldOf('empty');
       }
     } else if (action.type === 'SetCell') {
       const room = state.rooms.find((r) => r.id === action.payload.roomId);
