@@ -82,7 +82,7 @@ const GamePage: FC<{ room: Room & { game: Game } }> = ({ room }) => {
       {room.game.winner ? (
         <>
           <Title>Game ended, player {room.game.winner.name} won</Title>
-          <Link to="/rooms">to rooms</Link>
+          <Link to="rooms">to rooms</Link>
         </>
       ) : (
         <>
