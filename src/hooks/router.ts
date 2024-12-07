@@ -1,4 +1,4 @@
-import { ReactElement, useContext } from 'react';
+import { ReactElement, useContext, useEffect, useState } from 'react';
 import { RouterContext } from '../contexts/router';
 
 type Route = {
@@ -9,6 +9,16 @@ type Route = {
 
 export const useRouter = (routes: Route[]): ReactElement | null => {
   const { path } = useContext(RouterContext);
+  const [delayed, setDelayed] = useState(false);
+
+  // delay because we need to wait before parental effects are called
+  useEffect(() => {
+    setDelayed(true);
+  }, []);
+
+  if (!delayed) {
+    return null;
+  }
 
   const pathArr = path.split('/');
   let lastPath = '';
