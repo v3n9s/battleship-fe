@@ -8,7 +8,7 @@ const WsProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    const connection = new WebSocket(config.wsBackendUrl);
+    const connection = new WebSocket(config.backendUrl);
     setWs(connection);
     return () => {
       connection.close();
