@@ -64,7 +64,7 @@ const Rooms: FC = () => {
         {!state.serverResponded ? (
           <StatusText>Loading...</StatusText>
         ) : state.rooms.length === 0 ? (
-          <StatusText>There is no rooms yet</StatusText>
+          <StatusText>There are no rooms yet</StatusText>
         ) : (
           state.rooms
             .filter((room) => !room.game)
